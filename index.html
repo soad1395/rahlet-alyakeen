@@ -1,0 +1,257 @@
+ <!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>رحلة اليقين</title>
+
+<style>
+
+body{
+font-family:Tahoma;
+background:#e6f1ee;
+direction:rtl;
+text-align:center;
+}
+
+.container{
+width:420px;
+margin:60px auto;
+background:white;
+padding:30px;
+border-radius:20px;
+box-shadow:0 10px 30px rgba(0,0,0,.2);
+}
+
+input,select{
+width:90%;
+padding:10px;
+margin:10px;
+border-radius:8px;
+border:1px solid #ccc;
+}
+
+button{
+background:#2fb487;
+border:none;
+color:white;
+padding:12px 25px;
+border-radius:10px;
+cursor:pointer;
+font-size:16px;
+margin:10px;
+}
+
+.admin{
+color:#666;
+font-size:13px;
+cursor:pointer;
+}
+
+.panel{
+display:none;
+background:white;
+margin:30px auto;
+width:500px;
+padding:20px;
+border-radius:15px;
+}
+
+.station{
+background:#f4f4f4;
+margin:10px;
+padding:15px;
+border-radius:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>رحلة اليقين</h2>
+<p>نظام الفصل المقلوب التفاعلي</p>
+
+<input id="studentName" placeholder="اسم الطالبة">
+
+<select id="subjectSelect"></select>
+<select id="classSelect"></select>
+
+<button onclick="start()">🚀 ابدئي الرحلة</button>
+
+<p class="admin" onclick="openAdmin()">لوحة تحكم المعلمة</p>
+
+</div>
+
+
+<div id="adminPanel" class="panel">
+
+<h3>إدارة الصفوف</h3>
+
+<input id="newClass" placeholder="اسم الصف">
+<button onclick="addClass()">إضافة صف</button>
+
+<ul id="classList"></ul>
+
+<h3>إدارة المواد</h3>
+
+<input id="newSubject" placeholder="اسم المادة">
+<button onclick="addSubject()">إضافة مادة</button>
+
+<ul id="subjectList"></ul>
+
+<h3>إضافة فيديو الدرس</h3>
+
+<input type="file" id="videoUpload">
+
+<br>
+
+<input id="youtubeLink" placeholder="رابط فيديو YouTube">
+<button onclick="saveYoutube()">حفظ الرابط</button>
+
+</div>
+
+
+<div id="lessonPage" style="display:none">
+
+<h2>فيديو الدرس</h2>
+
+<video id="videoPlayer" width="500" controls></video>
+
+<div id="youtubePlayer"></div>
+
+<h2>محطات التعلم</h2>
+
+<div class="station">
+ما الفكرة الأساسية في الدرس؟
+<br>
+<textarea></textarea>
+</div>
+
+<div class="station">
+اذكري مثالاً يوضح المفهوم.
+<br>
+<textarea></textarea>
+</div>
+
+<div class="station">
+كيف يمكن تطبيق هذا الدرس في حياتك؟
+<br>
+<textarea></textarea>
+</div>
+
+<button onclick="saveProgress()">حفظ الإجابات</button>
+
+</div>
+
+
+<script>
+
+let classes = JSON.parse(localStorage.getItem("classes")) || ["الأول ثانوي"];
+let subjects = JSON.parse(localStorage.getItem("subjects")) || ["التوحيد"];
+
+function render(){
+
+let classSelect=document.getElementById("classSelect");
+classSelect.innerHTML="";
+classes.forEach(c=>{
+let opt=document.createElement("option");
+opt.text=c;
+classSelect.add(opt);
+});
+
+let subjectSelect=document.getElementById("subjectSelect");
+subjectSelect.innerHTML="";
+subjects.forEach(s=>{
+let opt=document.createElement("option");
+opt.text=s;
+subjectSelect.add(opt);
+});
+
+let classList=document.getElementById("classList");
+classList.innerHTML="";
+classes.forEach(c=>{
+let li=document.createElement("li");
+li.innerText=c;
+classList.appendChild(li);
+});
+
+let subjectList=document.getElementById("subjectList");
+subjectList.innerHTML="";
+subjects.forEach(s=>{
+let li=document.createElement("li");
+li.innerText=s;
+subjectList.appendChild(li);
+});
+
+}
+
+function addClass(){
+
+let name=document.getElementById("newClass").value;
+
+if(name){
+classes.push(name);
+localStorage.setItem("classes",JSON.stringify(classes));
+render();
+}
+
+}
+
+function addSubject(){
+
+let name=document.getElementById("newSubject").value;
+
+if(name){
+subjects.push(name);
+localStorage.setItem("subjects",JSON.stringify(subjects));
+render();
+}
+
+}
+
+function openAdmin(){
+
+document.getElementById("adminPanel").style.display="block";
+
+}
+
+function start(){
+
+document.querySelector(".container").style.display="none";
+document.getElementById("lessonPage").style.display="block";
+
+}
+
+document.getElementById("videoUpload").addEventListener("change",function(){
+
+let file=this.files[0];
+let url=URL.createObjectURL(file);
+
+document.getElementById("videoPlayer").src=url;
+
+});
+
+function saveYoutube(){
+
+let link=document.getElementById("youtubeLink").value;
+
+document.getElementById("youtubePlayer").innerHTML=
+'<iframe width="500" height="280" src="'+link.replace("watch?v=","embed/")+'" frameborder="0" allowfullscreen></iframe>';
+
+}
+
+function saveProgress(){
+
+alert("تم حفظ الإجابات");
+
+}
+
+render();
+
+</script>
+
+</body>
+</html>
