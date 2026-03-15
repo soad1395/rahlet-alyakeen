@@ -8,21 +8,35 @@
 
 body{
 font-family:Tahoma;
-background:#e6f1ee;
 direction:rtl;
 text-align:center;
+background:#eef5f3;
+margin:0;
+}
+
+header{
+background:#2fb487;
+color:white;
+padding:15px;
+font-size:24px;
+}
+
+.info{
+background:white;
+padding:10px;
+border-bottom:1px solid #ddd;
 }
 
 .container{
-width:420px;
-margin:60px auto;
 background:white;
-padding:30px;
-border-radius:20px;
-box-shadow:0 10px 30px rgba(0,0,0,.2);
+width:450px;
+margin:30px auto;
+padding:25px;
+border-radius:15px;
+box-shadow:0 10px 25px rgba(0,0,0,.2);
 }
 
-input,select{
+input,select,textarea{
 width:90%;
 padding:10px;
 margin:10px;
@@ -32,224 +46,218 @@ border:1px solid #ccc;
 
 button{
 background:#2fb487;
-border:none;
 color:white;
-padding:12px 25px;
-border-radius:10px;
+border:none;
+padding:12px 20px;
+border-radius:8px;
 cursor:pointer;
-font-size:16px;
-margin:10px;
-}
-
-.admin{
-color:#666;
-font-size:13px;
-cursor:pointer;
-}
-
-.panel{
-display:none;
-background:white;
-margin:30px auto;
-width:500px;
-padding:20px;
-border-radius:15px;
 }
 
 .station{
 background:#f4f4f4;
-margin:10px;
 padding:15px;
+margin:15px 0;
 border-radius:10px;
 }
 
-</style>
+.progress{
+background:#ddd;
+height:10px;
+border-radius:10px;
+margin:15px 0;
+}
 
+.bar{
+background:#2fb487;
+height:10px;
+width:0%;
+border-radius:10px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+td,th{
+border:1px solid #ccc;
+padding:8px;
+}
+
+.adminBtn{
+font-size:13px;
+cursor:pointer;
+color:#555;
+}
+
+</style>
 </head>
 
 <body>
 
-<div class="container">
+<header>منصة رحلة اليقين</header>
 
-<h2>رحلة اليقين</h2>
-<p>نظام الفصل المقلوب التفاعلي</p>
+<div class="info">
+
+<b>اسم المدرسة:</b> ___________<br>
+<b>اسم المديرة:</b> ___________<br>
+<b>اسم المعلمة:</b> ___________<br>
+<b>عنوان الدرس:</b> ___________<br>
+<b>التاريخ:</b> ___________
+
+</div>
+
+<!-- صفحة البداية -->
+
+<div class="container" id="start">
+
+<h3>بيانات الطالبة</h3>
 
 <input id="studentName" placeholder="اسم الطالبة">
 
-<select id="subjectSelect"></select>
-<select id="classSelect"></select>
+<select id="classSelect">
+<option>الأول ثانوي</option>
+<option>الثاني ثانوي</option>
+<option>الثالث ثانوي</option>
+</select>
 
-<button onclick="start()">🚀 ابدئي الرحلة</button>
+<select id="subjectSelect">
+<option>التوحيد</option>
+<option>الحديث</option>
+<option>الفقه</option>
+</select>
 
-<p class="admin" onclick="openAdmin()">لوحة تحكم المعلمة</p>
+<button onclick="startLesson()">ابدئي الرحلة</button>
 
-</div>
-
-
-<div id="adminPanel" class="panel">
-
-<h3>إدارة الصفوف</h3>
-
-<input id="newClass" placeholder="اسم الصف">
-<button onclick="addClass()">إضافة صف</button>
-
-<ul id="classList"></ul>
-
-<h3>إدارة المواد</h3>
-
-<input id="newSubject" placeholder="اسم المادة">
-<button onclick="addSubject()">إضافة مادة</button>
-
-<ul id="subjectList"></ul>
-
-<h3>إضافة فيديو الدرس</h3>
-
-<input type="file" id="videoUpload">
-
-<br>
-
-<input id="youtubeLink" placeholder="رابط فيديو YouTube">
-<button onclick="saveYoutube()">حفظ الرابط</button>
+<p class="adminBtn" onclick="openArchive()">لوحة المعلمة</p>
 
 </div>
 
+<!-- صفحة الدرس -->
 
-<div id="lessonPage" style="display:none">
+<div class="container" id="lessonPage" style="display:none">
 
-<h2>فيديو الدرس</h2>
+<h3>فيديو الدرس</h3>
 
-<video id="videoPlayer" width="500" controls></video>
+<iframe width="360" height="200"
+src="https://www.youtube.com/embed/VIDEOID"
+frameborder="0"
+allowfullscreen></iframe>
 
-<div id="youtubePlayer"></div>
+<div class="progress">
+<div class="bar" id="progressBar"></div>
+</div>
 
-<h2>محطات التعلم</h2>
+<h3>محطات التعلم</h3>
 
 <div class="station">
-ما الفكرة الأساسية في الدرس؟
-<br>
-<textarea></textarea>
+محطة الاكتشاف<br>
+<textarea id="q1"></textarea>
 </div>
 
 <div class="station">
-اذكري مثالاً يوضح المفهوم.
-<br>
-<textarea></textarea>
+محطة الفهم<br>
+<textarea id="q2"></textarea>
 </div>
 
 <div class="station">
-كيف يمكن تطبيق هذا الدرس في حياتك؟
-<br>
-<textarea></textarea>
+محطة التطبيق<br>
+<textarea id="q3"></textarea>
 </div>
 
-<button onclick="saveProgress()">حفظ الإجابات</button>
+<div class="station">
+محطة التأمل<br>
+<textarea id="q4"></textarea>
+</div>
+
+<button onclick="saveAnswers()">حفظ الإجابات</button>
 
 </div>
 
+<!-- الأرشيف -->
+
+<div class="container" id="archivePage" style="display:none">
+
+<h3>أرشيف الطالبات</h3>
+
+<table>
+
+<tr>
+<th>الاسم</th>
+<th>الصف</th>
+<th>المادة</th>
+<th>الإجابات</th>
+</tr>
+
+<tbody id="archiveTable"></tbody>
+
+</table>
+
+</div>
 
 <script>
 
-let classes = JSON.parse(localStorage.getItem("classes")) || ["الأول ثانوي"];
-let subjects = JSON.parse(localStorage.getItem("subjects")) || ["التوحيد"];
+let archive = JSON.parse(localStorage.getItem("archive")) || [];
 
-function render(){
+function startLesson(){
 
-let classSelect=document.getElementById("classSelect");
-classSelect.innerHTML="";
-classes.forEach(c=>{
-let opt=document.createElement("option");
-opt.text=c;
-classSelect.add(opt);
-});
+let name=document.getElementById("studentName").value;
 
-let subjectSelect=document.getElementById("subjectSelect");
-subjectSelect.innerHTML="";
-subjects.forEach(s=>{
-let opt=document.createElement("option");
-opt.text=s;
-subjectSelect.add(opt);
-});
-
-let classList=document.getElementById("classList");
-classList.innerHTML="";
-classes.forEach(c=>{
-let li=document.createElement("li");
-li.innerText=c;
-classList.appendChild(li);
-});
-
-let subjectList=document.getElementById("subjectList");
-subjectList.innerHTML="";
-subjects.forEach(s=>{
-let li=document.createElement("li");
-li.innerText=s;
-subjectList.appendChild(li);
-});
-
+if(name==""){
+alert("اكتبي اسم الطالبة");
+return;
 }
 
-function addClass(){
-
-let name=document.getElementById("newClass").value;
-
-if(name){
-classes.push(name);
-localStorage.setItem("classes",JSON.stringify(classes));
-render();
-}
-
-}
-
-function addSubject(){
-
-let name=document.getElementById("newSubject").value;
-
-if(name){
-subjects.push(name);
-localStorage.setItem("subjects",JSON.stringify(subjects));
-render();
-}
-
-}
-
-function openAdmin(){
-
-document.getElementById("adminPanel").style.display="block";
-
-}
-
-function start(){
-
-document.querySelector(".container").style.display="none";
+document.getElementById("start").style.display="none";
 document.getElementById("lessonPage").style.display="block";
 
 }
 
-document.getElementById("videoUpload").addEventListener("change",function(){
+function saveAnswers(){
 
-let file=this.files[0];
-let url=URL.createObjectURL(file);
+let name=document.getElementById("studentName").value;
+let cls=document.getElementById("classSelect").value;
+let sub=document.getElementById("subjectSelect").value;
 
-document.getElementById("videoPlayer").src=url;
+let answers=
+document.getElementById("q1").value+" | "+
+document.getElementById("q2").value+" | "+
+document.getElementById("q3").value+" | "+
+document.getElementById("q4").value;
 
-});
+archive.push({name,cls,sub,answers});
 
-function saveYoutube(){
+localStorage.setItem("archive",JSON.stringify(archive));
 
-let link=document.getElementById("youtubeLink").value;
-
-document.getElementById("youtubePlayer").innerHTML=
-'<iframe width="500" height="280" src="'+link.replace("watch?v=","embed/")+'" frameborder="0" allowfullscreen></iframe>';
-
-}
-
-function saveProgress(){
+document.getElementById("progressBar").style.width="100%";
 
 alert("تم حفظ الإجابات");
 
 }
 
-render();
+function openArchive(){
+
+document.getElementById("start").style.display="none";
+document.getElementById("archivePage").style.display="block";
+
+let table=document.getElementById("archiveTable");
+
+archive.forEach(a=>{
+
+let row=`
+<tr>
+<td>${a.name}</td>
+<td>${a.cls}</td>
+<td>${a.sub}</td>
+<td>${a.answers}</td>
+</tr>
+`;
+
+table.innerHTML+=row;
+
+});
+
+}
 
 </script>
 
