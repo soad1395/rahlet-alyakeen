@@ -10,44 +10,30 @@ body{
 direction:rtl;
 font-family:Tahoma;
 margin:0;
-background:radial-gradient(circle,#020617,#020617,#020617);
 color:white;
 text-align:center;
-overflow-x:hidden;
-}
-
-/* خلفية نيون */
-
-body::before{
-content:"";
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:radial-gradient(circle at 20% 20%,#00eaff33,transparent),
-radial-gradient(circle at 80% 80%,#00eaff33,transparent);
-animation:bgmove 8s infinite alternate;
-z-index:-1;
+background:linear-gradient(270deg,#020617,#001a2e,#020617);
+background-size:400% 400%;
+animation:bgmove 12s infinite;
 }
 
 @keyframes bgmove{
-0%{transform:scale(1)}
-100%{transform:scale(1.1)}
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
 }
 
 h1{
-font-size:38px;
 margin-top:20px;
-text-shadow:0 0 25px #00eaff;
+text-shadow:0 0 25px cyan;
 }
 
 .box{
-background:#0f172a;
 margin:25px;
 padding:25px;
 border-radius:20px;
-box-shadow:0 0 30px #00eaff;
+background:#0f172a;
+box-shadow:0 0 30px cyan;
 }
 
 input,select{
@@ -67,8 +53,8 @@ cursor:pointer;
 }
 
 .circle{
-width:130px;
-height:130px;
+width:120px;
+height:120px;
 border-radius:50%;
 display:inline-flex;
 align-items:center;
@@ -77,14 +63,19 @@ margin:10px;
 cursor:pointer;
 font-size:18px;
 background:#1e293b;
-box-shadow:0 0 20px cyan;
+box-shadow:0 0 25px cyan;
+transition:0.3s;
+}
+
+.circle:hover{
+transform:scale(1.1);
 }
 
 .robot{
 position:fixed;
 bottom:20px;
 left:20px;
-width:110px;
+width:120px;
 animation:float 3s infinite;
 }
 
@@ -94,6 +85,16 @@ animation:float 3s infinite;
 100%{transform:translateY(0)}
 }
 
+.cup{
+font-size:70px;
+animation:cupmove 1s infinite alternate;
+}
+
+@keyframes cupmove{
+from{transform:translateY(0)}
+to{transform:translateY(-12px)}
+}
+
 table{
 width:100%;
 margin-top:20px;
@@ -101,8 +102,8 @@ border-collapse:collapse;
 }
 
 th,td{
-padding:10px;
 border:1px solid cyan;
+padding:10px;
 }
 
 </style>
@@ -113,18 +114,6 @@ border:1px solid cyan;
 <h1>🧠 عالم بصمة الذكاء</h1>
 
 <img class="robot" src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png">
-
-<div class="box">
-
-<h2>البيانات الأساسية</h2>
-
-<input placeholder="اسم المدرسة">
-<input placeholder="اسم المعلمة">
-<input placeholder="المادة">
-<input placeholder="الصف">
-<input placeholder="عنوان الدرس">
-
-</div>
 
 <div class="box">
 
@@ -168,7 +157,6 @@ border:1px solid cyan;
 <h2>السؤال</h2>
 
 <input id="questionInput" placeholder="اكتب السؤال">
-
 <button onclick="showQuestion()">عرض السؤال</button>
 
 <h3 id="question"></h3>
@@ -200,12 +188,19 @@ border:1px solid cyan;
 
 <div class="box">
 
-<button onclick="winner()">🏆 إعلان الفريق الفائز</button>
+<h2>لوحة الترتيب</h2>
+
+<ul id="leaderboard"></ul>
 
 </div>
 
-<audio id="correctSound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
-<audio id="wrongSound" src="https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg"></audio>
+<div class="box">
+
+<button onclick="winner()">🏆 إعلان الفريق الفائز</button>
+
+<div id="cup"></div>
+
+</div>
 
 <script>
 
@@ -213,29 +208,18 @@ let groups=[]
 let classes=[]
 let correctAnswer=0
 
-/* صوت دخول */
-
-window.onload=function(){
-
-speak("مرحباً بكم في عالم بصمة الذكاء")
-
-}
-
 function speak(text){
-
 let speech=new SpeechSynthesisUtterance(text)
-
 speech.lang="ar-SA"
-
 speech.rate=0.9
-
 speech.pitch=1.1
-
 speechSynthesis.speak(speech)
-
 }
 
-/* الفصول */
+window.addEventListener("click",function startVoice(){
+speak("مرحباً بكم في عالم بصمة الذكاء الاصطناعي")
+window.removeEventListener("click",startVoice)
+})
 
 function addClass(){
 
@@ -243,13 +227,11 @@ let name=document.getElementById("classInput").value
 
 classes.push(name)
 
-document.getElementById("classes").innerHTML += `<li>${name}</li>`
+document.getElementById("classes").innerHTML+=`<li>${name}</li>`
 
-document.getElementById("classSelect").innerHTML += `<option>${name}</option>`
+document.getElementById("classSelect").innerHTML+=`<option>${name}</option>`
 
 }
-
-/* المجموعات */
 
 function addGroup(){
 
@@ -282,25 +264,33 @@ html+=`
 
 document.getElementById("groups").innerHTML=html
 
+updateBoard()
+
 }
 
 function addPoint(i){
-
 groups[i].points++
-
 render()
-
 }
 
 function minusPoint(i){
-
 groups[i].points--
-
 render()
-
 }
 
-/* السؤال */
+function updateBoard(){
+
+let sorted=[...groups].sort((a,b)=>b.points-a.points)
+
+let html=""
+
+sorted.forEach(g=>{
+html+=`<li>${g.name} : ${g.points}</li>`
+})
+
+document.getElementById("leaderboard").innerHTML=html
+
+}
 
 function showQuestion(){
 
@@ -312,44 +302,45 @@ speak(q)
 
 }
 
-/* الإجابات */
+function shuffle(arr){
+return arr.sort(()=>Math.random()-0.5)
+}
 
 function loadAnswers(){
 
-c1.innerText=ans1.value
-c2.innerText=ans2.value
-c3.innerText=ans3.value
-c4.innerText=ans4.value
+let answers=[
+ans1.value,
+ans2.value,
+ans3.value,
+ans4.value
+]
+
+answers=shuffle(answers)
+
+c1.innerText=answers[0]
+c2.innerText=answers[1]
+c3.innerText=answers[2]
+c4.innerText=answers[3]
 
 correctAnswer=document.getElementById("correct").value
 
 }
 
-/* التحقق */
-
 function checkAnswer(num){
 
 if(num==correctAnswer){
 
-document.getElementById("correctSound").play()
-
 document.getElementById("c"+(num+1)).style.background="green"
-
 speak("إجابة ذكية رائعة")
 
 }else{
 
-document.getElementById("wrongSound").play()
-
 document.getElementById("c"+(num+1)).style.background="red"
-
 speak("حاولي مرة أخرى")
 
 }
 
 }
-
-/* الفائز */
 
 function winner(){
 
@@ -357,19 +348,15 @@ let max=0
 let name=""
 
 groups.forEach(g=>{
-
 if(g.points>max){
-
 max=g.points
 name=g.name
-
 }
-
 })
 
-speak("الفريق الفائز هو "+name)
+document.getElementById("cup").innerHTML=`<div class="cup">🏆</div><h2>${name}</h2>`
 
-alert("🏆 الفريق الفائز: "+name)
+speak("الفريق الفائز هو "+name)
 
 }
 
