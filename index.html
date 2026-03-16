@@ -12,39 +12,41 @@ font-family:Tahoma;
 margin:0;
 color:white;
 text-align:center;
-background:linear-gradient(270deg,#020617,#001a2e,#020617);
-background-size:400% 400%;
-animation:bgmove 12s infinite;
+
+background:linear-gradient(270deg,#020617,#0f172a,#020617);
+background-size:600% 600%;
+animation:bg 15s infinite;
 }
 
-@keyframes bgmove{
+@keyframes bg{
 0%{background-position:0% 50%}
 50%{background-position:100% 50%}
 100%{background-position:0% 50%}
 }
 
-h1{
-margin-top:20px;
-text-shadow:0 0 25px cyan;
+.container{
+padding:20px;
 }
 
 .box{
-margin:25px;
-padding:25px;
+background:#020617;
 border-radius:20px;
-background:#0f172a;
-box-shadow:0 0 30px cyan;
+padding:25px;
+margin:20px auto;
+width:90%;
+box-shadow:0 0 35px #00e5ff;
 }
 
 input,select{
 padding:10px;
+margin:5px;
 border-radius:10px;
 border:none;
-margin:5px;
+width:160px;
 }
 
 button{
-padding:10px 18px;
+padding:10px 20px;
 border:none;
 border-radius:10px;
 background:#06b6d4;
@@ -52,58 +54,50 @@ color:white;
 cursor:pointer;
 }
 
-.circle{
-width:120px;
-height:120px;
+.answer{
+width:150px;
+height:150px;
 border-radius:50%;
 display:inline-flex;
 align-items:center;
 justify-content:center;
-margin:10px;
-cursor:pointer;
+margin:20px;
 font-size:18px;
-background:#1e293b;
-box-shadow:0 0 25px cyan;
-transition:0.3s;
+cursor:pointer;
+transition:.4s;
+box-shadow:0 0 25px #00e5ff;
 }
 
-.circle:hover{
+.answer:hover{
 transform:scale(1.1);
 }
+
+.a{background:#facc15}
+.b{background:#22c55e}
+.c{background:#ef4444}
+.d{background:#3b82f6}
 
 .robot{
 position:fixed;
 bottom:20px;
 left:20px;
-width:120px;
-animation:float 3s infinite;
+width:90px;
+animation:robot 2s infinite alternate;
 }
 
-@keyframes float{
-0%{transform:translateY(0)}
-50%{transform:translateY(-12px)}
-100%{transform:translateY(0)}
-}
-
-.cup{
-font-size:70px;
-animation:cupmove 1s infinite alternate;
-}
-
-@keyframes cupmove{
+@keyframes robot{
 from{transform:translateY(0)}
-to{transform:translateY(-12px)}
+to{transform:translateY(-10px)}
 }
 
-table{
-width:100%;
-margin-top:20px;
-border-collapse:collapse;
+.trophy{
+font-size:60px;
+animation:cup 1s infinite alternate;
 }
 
-th,td{
-border:1px solid cyan;
-padding:10px;
+@keyframes cup{
+from{transform:scale(1)}
+to{transform:scale(1.2)}
 }
 
 </style>
@@ -111,232 +105,187 @@ padding:10px;
 
 <body>
 
-<h1>🧠 عالم بصمة الذكاء</h1>
+<div class="container">
 
-<img class="robot" src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png">
+<h1>🤖 عالم بصمة الذكاء</h1>
 
 <div class="box">
 
 <h2>الفصول</h2>
 
-<input id="classInput" placeholder="اسم الفصل">
+<input id="className" placeholder="اسم الفصل">
+
 <button onclick="addClass()">إضافة فصل</button>
 
-<ul id="classes"></ul>
+<ul id="classList"></ul>
 
 </div>
+
 
 <div class="box">
 
 <h2>المجموعات</h2>
 
-<select id="classSelect"></select>
+<input id="groupName" placeholder="اسم المجموعة">
 
-<input id="groupInput" placeholder="اسم المجموعة">
+<select id="groupClass"></select>
 
 <button onclick="addGroup()">إضافة</button>
 
-<table>
-
+<table border="1" width="100%" style="margin-top:15px">
 <tr>
 <th>الفصل</th>
 <th>المجموعة</th>
 <th>النقاط</th>
-<th>+</th>
-<th>-</th>
 </tr>
-
 <tbody id="groups"></tbody>
-
 </table>
 
 </div>
+
 
 <div class="box">
 
 <h2>السؤال</h2>
 
-<input id="questionInput" placeholder="اكتب السؤال">
-<button onclick="showQuestion()">عرض السؤال</button>
-
-<h3 id="question"></h3>
-
-<br>
-
-<input id="ans1" placeholder="الإجابة 1">
-<input id="ans2" placeholder="الإجابة 2">
-<input id="ans3" placeholder="الإجابة 3">
-<input id="ans4" placeholder="الإجابة 4">
-
-<select id="correct">
-<option value="0">الإجابة الصحيحة 1</option>
-<option value="1">الإجابة الصحيحة 2</option>
-<option value="2">الإجابة الصحيحة 3</option>
-<option value="3">الإجابة الصحيحة 4</option>
-</select>
-
-<button onclick="loadAnswers()">تحميل الإجابات</button>
+<input id="question" placeholder="اكتب السؤال">
 
 <br><br>
 
-<div class="circle" onclick="checkAnswer(0)" id="c1"></div>
-<div class="circle" onclick="checkAnswer(1)" id="c2"></div>
-<div class="circle" onclick="checkAnswer(2)" id="c3"></div>
-<div class="circle" onclick="checkAnswer(3)" id="c4"></div>
+<input id="a1" placeholder="الإجابة 1">
+<input id="a2" placeholder="الإجابة 2">
+<input id="a3" placeholder="الإجابة 3">
+<input id="a4" placeholder="الإجابة 4">
+
+<br><br>
+
+<select id="correct">
+
+<option value="1">الإجابة الصحيحة 1</option>
+<option value="2">الإجابة الصحيحة 2</option>
+<option value="3">الإجابة الصحيحة 3</option>
+<option value="4">الإجابة الصحيحة 4</option>
+
+</select>
+
+<button onclick="loadQuestion()">عرض السؤال</button>
 
 </div>
+
 
 <div class="box">
 
-<h2>لوحة الترتيب</h2>
+<h2 id="qText"></h2>
 
-<ul id="leaderboard"></ul>
+<div class="answer a" onclick="check(1)" id="b1"></div>
+<div class="answer b" onclick="check(2)" id="b2"></div>
+<div class="answer c" onclick="check(3)" id="b3"></div>
+<div class="answer d" onclick="check(4)" id="b4"></div>
 
 </div>
+
 
 <div class="box">
 
 <button onclick="winner()">🏆 إعلان الفريق الفائز</button>
 
-<div id="cup"></div>
+<h2 id="win"></h2>
 
 </div>
 
+</div>
+
+<img class="robot"
+src="https://cdn-icons-png.flaticon.com/512/4712/4712100.png">
+
 <script>
 
-let groups=[]
-let classes=[]
-let correctAnswer=0
+let correctAnswer=1
 
 function speak(text){
+
 let speech=new SpeechSynthesisUtterance(text)
 speech.lang="ar-SA"
 speech.rate=0.9
-speech.pitch=1.1
+speech.pitch=1
+
 speechSynthesis.speak(speech)
+
 }
 
-window.addEventListener("click",function startVoice(){
-speak("مرحباً بكم في عالم بصمة الذكاء الاصطناعي")
-window.removeEventListener("click",startVoice)
-})
+window.onload=function(){
+
+speak("مرحباً بكم في عالم بصمة الذكاء. استعدوا للتحدي")
+
+}
 
 function addClass(){
 
-let name=document.getElementById("classInput").value
+let name=document.getElementById("className").value
 
-classes.push(name)
+let li=document.createElement("li")
 
-document.getElementById("classes").innerHTML+=`<li>${name}</li>`
+li.innerText=name
 
-document.getElementById("classSelect").innerHTML+=`<option>${name}</option>`
+document.getElementById("classList").appendChild(li)
+
+let opt=document.createElement("option")
+opt.innerText=name
+
+document.getElementById("groupClass").appendChild(opt)
 
 }
 
 function addGroup(){
 
-let name=document.getElementById("groupInput").value
-let cls=document.getElementById("classSelect").value
+let g=document.getElementById("groupName").value
+let c=document.getElementById("groupClass").value
 
-groups.push({name:name,class:cls,points:0})
+let tr=document.createElement("tr")
 
-render()
+tr.innerHTML=
+"<td>"+c+"</td>"+
+"<td>"+g+"</td>"+
+"<td class='points'>0</td>"
 
-}
-
-function render(){
-
-let html=""
-
-groups.forEach((g,i)=>{
-
-html+=`
-<tr>
-<td>${g.class}</td>
-<td>${g.name}</td>
-<td>${g.points}</td>
-<td><button onclick="addPoint(${i})">+</button></td>
-<td><button onclick="minusPoint(${i})">-</button></td>
-</tr>
-`
-
-})
-
-document.getElementById("groups").innerHTML=html
-
-updateBoard()
+document.getElementById("groups").appendChild(tr)
 
 }
 
-function addPoint(i){
-groups[i].points++
-render()
-}
+function loadQuestion(){
 
-function minusPoint(i){
-groups[i].points--
-render()
-}
+let q=document.getElementById("question").value
 
-function updateBoard(){
+document.getElementById("qText").innerText=q
 
-let sorted=[...groups].sort((a,b)=>b.points-a.points)
+document.getElementById("b1").innerText=document.getElementById("a1").value
+document.getElementById("b2").innerText=document.getElementById("a2").value
+document.getElementById("b3").innerText=document.getElementById("a3").value
+document.getElementById("b4").innerText=document.getElementById("a4").value
 
-let html=""
-
-sorted.forEach(g=>{
-html+=`<li>${g.name} : ${g.points}</li>`
-})
-
-document.getElementById("leaderboard").innerHTML=html
-
-}
-
-function showQuestion(){
-
-let q=document.getElementById("questionInput").value
-
-document.getElementById("question").innerText=q
+correctAnswer=document.getElementById("correct").value
 
 speak(q)
 
 }
 
-function shuffle(arr){
-return arr.sort(()=>Math.random()-0.5)
-}
-
-function loadAnswers(){
-
-let answers=[
-ans1.value,
-ans2.value,
-ans3.value,
-ans4.value
-]
-
-answers=shuffle(answers)
-
-c1.innerText=answers[0]
-c2.innerText=answers[1]
-c3.innerText=answers[2]
-c4.innerText=answers[3]
-
-correctAnswer=document.getElementById("correct").value
-
-}
-
-function checkAnswer(num){
+function check(num){
 
 if(num==correctAnswer){
 
-document.getElementById("c"+(num+1)).style.background="green"
-speak("إجابة ذكية رائعة")
+speak("إجابة رائعة")
+
+event.target.style.background="green"
+
+let p=document.querySelector(".points")
+
+p.innerText=parseInt(p.innerText)+1
 
 }else{
 
-document.getElementById("c"+(num+1)).style.background="red"
-speak("حاولي مرة أخرى")
+speak("إجابة غير صحيحة")
+
+event.target.style.background="red"
 
 }
 
@@ -344,19 +293,27 @@ speak("حاولي مرة أخرى")
 
 function winner(){
 
-let max=0
-let name=""
+let rows=document.querySelectorAll("#groups tr")
 
-groups.forEach(g=>{
-if(g.points>max){
-max=g.points
-name=g.name
+let max=0
+let win=""
+
+rows.forEach(r=>{
+
+let p=parseInt(r.children[2].innerText)
+
+if(p>max){
+
+max=p
+win=r.children[1].innerText
+
 }
+
 })
 
-document.getElementById("cup").innerHTML=`<div class="cup">🏆</div><h2>${name}</h2>`
+document.getElementById("win").innerHTML="<div class='trophy'>🏆</div> الفريق الفائز: "+win
 
-speak("الفريق الفائز هو "+name)
+speak("الفريق الفائز هو "+win)
 
 }
 
