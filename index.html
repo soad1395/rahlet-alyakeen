@@ -8,19 +8,37 @@
 
 body{
 direction:rtl;
-font-family:Tahoma;
+font-family:Tajawal;
 margin:0;
 color:white;
 text-align:center;
-background:linear-gradient(270deg,#020617,#001a2e,#020617);
-background-size:600% 600%;
-animation:bg 15s infinite;
+
+background:linear-gradient(270deg,#020617,#001a2e,#00e5ff,#001a2e,#020617);
+background-size:800% 800%;
+animation:bgMove 15s infinite;
 }
 
-@keyframes bg{
+@keyframes bgMove{
 0%{background-position:0% 50%}
 50%{background-position:100% 50%}
 100%{background-position:0% 50%}
+}
+
+body::before{
+content:"";
+position:fixed;
+width:100%;
+height:100%;
+background-image:
+linear-gradient(#00e5ff22 1px,transparent 1px),
+linear-gradient(90deg,#00e5ff22 1px,transparent 1px);
+background-size:40px 40px;
+animation:gridMove 20s linear infinite;
+}
+
+@keyframes gridMove{
+0%{transform:translateY(0)}
+100%{transform:translateY(40px)}
 }
 
 .box{
@@ -32,9 +50,25 @@ width:90%;
 box-shadow:0 0 35px #00e5ff;
 }
 
+input,select{
+padding:10px;
+margin:5px;
+border-radius:10px;
+border:none;
+}
+
+button{
+padding:10px 20px;
+border:none;
+border-radius:10px;
+background:#00bcd4;
+color:white;
+cursor:pointer;
+}
+
 .answer{
-width:140px;
-height:140px;
+width:150px;
+height:150px;
 border-radius:50%;
 display:inline-flex;
 align-items:center;
@@ -48,7 +82,23 @@ box-shadow:0 0 25px #00e5ff;
 position:fixed;
 bottom:20px;
 left:20px;
-width:120px;
+width:110px;
+animation:robotMove 2s infinite alternate;
+}
+
+@keyframes robotMove{
+from{transform:translateY(0)}
+to{transform:translateY(-10px)}
+}
+
+.trophy{
+font-size:60px;
+animation:cup 1s infinite alternate;
+}
+
+@keyframes cup{
+from{transform:scale(1)}
+to{transform:scale(1.2)}
 }
 
 </style>
@@ -107,53 +157,76 @@ width:120px;
 
 </div>
 
+<div class="box">
+
+<button onclick="winner()">🏆 إعلان الفريق الفائز</button>
+
+<h2 id="win"></h2>
+
+</div>
+
 <img class="robot"
 src="https://cdn-icons-png.flaticon.com/512/4712/4712100.png">
 
 <script>
 
-let correctAnswer = 1;
+let correctAnswer=1
 
 function speak(text){
-let speech = new SpeechSynthesisUtterance(text);
-speech.lang="ar-SA";
-speech.rate=0.9;
-speechSynthesis.speak(speech);
+
+let speech=new SpeechSynthesisUtterance(text)
+
+speech.lang="ar-SA"
+speech.rate=0.9
+
+speechSynthesis.speak(speech)
+
 }
 
 window.onload=function(){
-speak("مرحباً بكن في عالم بصمة الذكاء");
+
+speak("مرحباً بكن في عالم بصمة الذكاء الاصطناعي")
+
 }
 
 function loadQuestion(){
 
-let q=document.getElementById("question").value;
+let q=document.getElementById("question").value
 
-document.getElementById("qText").innerText=q;
+document.getElementById("qText").innerText=q
 
-document.getElementById("b1").innerText=document.getElementById("a1").value;
-document.getElementById("b2").innerText=document.getElementById("a2").value;
-document.getElementById("b3").innerText=document.getElementById("a3").value;
-document.getElementById("b4").innerText=document.getElementById("a4").value;
+document.getElementById("b1").innerText=document.getElementById("a1").value
+document.getElementById("b2").innerText=document.getElementById("a2").value
+document.getElementById("b3").innerText=document.getElementById("a3").value
+document.getElementById("b4").innerText=document.getElementById("a4").value
 
-correctAnswer = document.getElementById("correct").value;
+correctAnswer=document.getElementById("correct").value
 
-speak(q);
+speak(q)
+
 }
 
 function check(num){
 
-if(num == correctAnswer){
+if(num==correctAnswer){
 
-event.target.style.background="green";
-speak("إجابة صحيحة");
+event.target.style.background="green"
+speak("إجابة صحيحة")
 
 }else{
 
-event.target.style.background="red";
-speak("إجابة خاطئة");
+event.target.style.background="red"
+speak("إجابة خاطئة")
 
 }
+
+}
+
+function winner(){
+
+document.getElementById("win").innerHTML="<div class='trophy'>🏆</div> الفريق الفائز"
+
+speak("تم إعلان الفريق الفائز")
 
 }
 
