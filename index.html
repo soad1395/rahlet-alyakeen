@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
@@ -9,72 +9,72 @@
 body{
 direction:rtl;
 font-family:Tahoma;
-margin:0;
-background:linear-gradient(135deg,#020f18,#001c2b,#002f3f);
+background:radial-gradient(circle,#020617,#020617,#020617);
 color:white;
 text-align:center;
+margin:0;
 }
 
-/* صندوق */
-
-.card{
-background:#021c2d;
-margin:20px auto;
-width:85%;
-max-width:900px;
-padding:20px;
-border-radius:12px;
-
-box-shadow:
-0 0 10px #00e5ff,
-0 0 30px #00e5ff44,
-0 0 60px #00e5ff22;
+h1{
+margin-top:20px;
+font-size:40px;
+text-shadow:0 0 25px #00f2ff;
 }
 
-header{
-font-size:34px;
-padding:20px;
-text-shadow:0 0 20px #00e5ff;
+.box{
+background:#0f172a;
+margin:25px;
+padding:25px;
+border-radius:20px;
+box-shadow:0 0 30px #00f2ff;
 }
 
-input,select{
+input{
 padding:10px;
-margin:5px;
-border-radius:6px;
+border-radius:10px;
 border:none;
+margin:5px;
 }
 
 button{
-padding:10px 15px;
+padding:10px 18px;
 border:none;
-border-radius:8px;
-background:#00e5ff;
+border-radius:10px;
+background:#06b6d4;
+color:white;
 cursor:pointer;
 }
 
 .circle{
-width:130px;
-height:130px;
+width:140px;
+height:140px;
 border-radius:50%;
 display:inline-flex;
 align-items:center;
 justify-content:center;
 margin:10px;
-font-size:16px;
+font-size:20px;
 cursor:pointer;
-font-weight:bold;
-background:#0b5f7a;
+box-shadow:0 0 20px #00f2ff;
 }
 
-table{
-width:100%;
-border-collapse:collapse;
-margin-top:10px;
+.a{background:#facc15}
+.b{background:#22c55e}
+.c{background:#ef4444}
+.d{background:#3b82f6}
+
+.robot{
+position:fixed;
+bottom:20px;
+left:20px;
+width:110px;
+animation:float 3s infinite;
 }
 
-th,td{
-border:1px solid #00e5ff;
-padding:8px;
+@keyframes float{
+0%{transform:translateY(0)}
+50%{transform:translateY(-12px)}
+100%{transform:translateY(0)}
 }
 
 </style>
@@ -82,14 +82,15 @@ padding:8px;
 
 <body>
 
-<header>🧠 عالم بصمة الذكاء</header>
+<h1>🧠 عالم بصمة الذكاء</h1>
 
-<div class="card">
+<img class="robot" src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png">
 
-<h3>البيانات الأساسية</h3>
+<div class="box">
+
+<h2>البيانات الأساسية</h2>
 
 <input placeholder="اسم المدرسة">
-<input placeholder="اسم المديرة">
 <input placeholder="اسم المعلمة">
 <input placeholder="المادة">
 <input placeholder="الصف">
@@ -97,25 +98,25 @@ padding:8px;
 
 </div>
 
-<div class="card">
+<div class="box">
 
-<h3>الفصول</h3>
+<h2>الفصول</h2>
 
 <input id="classInput" placeholder="اسم الفصل">
 <button onclick="addClass()">إضافة فصل</button>
 
-<ul id="classesList"></ul>
+<ul id="classes"></ul>
 
 </div>
 
-<div class="card">
+<div class="box">
 
-<h3>المجموعات</h3>
+<h2>المجموعات</h2>
 
-<input id="teamName" placeholder="اسم المجموعة">
-<button onclick="addTeam()">إضافة</button>
+<input id="groupInput" placeholder="اسم المجموعة">
+<button onclick="addGroup()">إضافة</button>
 
-<table id="teamsTable">
+<table width="100%" border="1">
 
 <tr>
 <th>المجموعة</th>
@@ -123,130 +124,101 @@ padding:8px;
 <th>+</th>
 <th>-</th>
 </tr>
+
+<tbody id="groups"></tbody>
 
 </table>
 
 </div>
 
-<div class="card">
+<div class="box">
 
-<h3>السؤال</h3>
+<h2>السؤال</h2>
 
 <input id="questionInput" placeholder="اكتب السؤال">
+<button onclick="showQuestion()">عرض السؤال</button>
 
-<button onclick="addQuestion()">عرض السؤال</button>
+<h3 id="question"></h3>
 
-<h2 id="questionTitle"></h2>
+<div>
 
-<br>
-
-<input id="a1t" placeholder="الإجابة 1">
-<input id="a2t" placeholder="الإجابة 2">
-<input id="a3t" placeholder="الإجابة 3">
-<input id="a4t" placeholder="الإجابة 4">
-
-<br>
-
-<label>الإجابة الصحيحة</label>
-
-<select id="correctAnswer">
-<option value="1">الإجابة 1</option>
-<option value="2">الإجابة 2</option>
-<option value="3">الإجابة 3</option>
-<option value="4">الإجابة 4</option>
-</select>
-
-<button onclick="loadAnswers()">تحميل الإجابات</button>
-
-<br><br>
-
-<div class="circle" onclick="checkAnswer(1)" id="c1"></div>
-<div class="circle" onclick="checkAnswer(2)" id="c2"></div>
-<div class="circle" onclick="checkAnswer(3)" id="c3"></div>
-<div class="circle" onclick="checkAnswer(4)" id="c4"></div>
+<div class="circle a" onclick="answer(0)">A</div>
+<div class="circle b" onclick="answer(1)">B</div>
+<div class="circle c" onclick="answer(2)">C</div>
+<div class="circle d" onclick="answer(3)">D</div>
 
 </div>
 
-<audio id="correctSound"
-src="https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3">
-</audio>
+</div>
 
-<audio id="wrongSound"
-src="https://assets.mixkit.co/sfx/preview/mixkit-player-losing-or-failing-2042.mp3">
-</audio>
+<div class="box">
+
+<button onclick="winner()">🏆 إعلان الفريق الفائز</button>
+
+</div>
+
+<audio id="startSound" src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg"></audio>
+<audio id="correctSound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
+<audio id="wrongSound" src="https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg"></audio>
 
 <script>
 
-/* صوت دخول */
+let groups=[]
+let correctAnswer=1
 
 window.onload=function(){
 
-let msg=new SpeechSynthesisUtterance(
-"مرحباً بكن في عالم بصمة الذكاء"
-)
+document.getElementById("startSound").play()
 
-msg.lang="ar-SA"
-
-speechSynthesis.speak(msg)
+speak("مرحباً بكم في عالم بصمة الذكاء")
 
 }
 
-/* الفصول */
+function speak(text){
 
-let classes=[]
+let speech=new SpeechSynthesisUtterance()
+
+speech.lang="ar-SA"
+
+speech.text=text
+
+speech.rate=0.9
+
+speech.pitch=1.2
+
+speechSynthesis.speak(speech)
+
+}
 
 function addClass(){
 
 let name=document.getElementById("classInput").value
 
-classes.push(name)
+let li=document.createElement("li")
 
-renderClasses()
+li.innerText=name
 
-}
-
-function renderClasses(){
-
-let list=document.getElementById("classesList")
-
-list.innerHTML=""
-
-classes.forEach(c=>{
-list.innerHTML+=`<li>${c}</li>`
-})
+document.getElementById("classes").appendChild(li)
 
 }
 
-/* المجموعات */
+function addGroup(){
 
-let groups=[]
-
-function addTeam(){
-
-let name=document.getElementById("teamName").value
+let name=document.getElementById("groupInput").value
 
 groups.push({name:name,points:0})
 
-renderGroups()
+render()
 
 }
 
-function renderGroups(){
+function render(){
 
-let table=document.getElementById("teamsTable")
-
-table.innerHTML=`
-<tr>
-<th>المجموعة</th>
-<th>النقاط</th>
-<th>+</th>
-<th>-</th>
-</tr>
-`
+let html=""
 
 groups.forEach((g,i)=>{
 
-table.innerHTML+=`
+html+=`
 <tr>
 <td>${g.name}</td>
 <td>${g.points}</td>
@@ -257,89 +229,77 @@ table.innerHTML+=`
 
 })
 
+document.getElementById("groups").innerHTML=html
+
 }
 
 function addPoint(i){
 
 groups[i].points++
-renderGroups()
+
+render()
 
 }
 
 function minusPoint(i){
 
 groups[i].points--
-renderGroups()
+
+render()
 
 }
 
-/* السؤال */
-
-let correct=0
-
-function addQuestion(){
+function showQuestion(){
 
 let q=document.getElementById("questionInput").value
 
-document.getElementById("questionTitle").innerText=q
+document.getElementById("question").innerText=q
 
-let msg=new SpeechSynthesisUtterance(q)
-
-msg.lang="ar-SA"
-
-speechSynthesis.speak(msg)
+speak(q)
 
 }
 
-/* تحميل الإجابات */
+function answer(i){
 
-function loadAnswers(){
+if(i==correctAnswer){
 
-c1.innerText=a1t.value
-c2.innerText=a2t.value
-c3.innerText=a3t.value
-c4.innerText=a4t.value
+document.getElementById("correctSound").play()
 
-correct=document.getElementById("correctAnswer").value
+speak("إجابة ذكية رائعة")
+
+alert("⭐ إجابة صحيحة")
+
+}else{
+
+document.getElementById("wrongSound").play()
+
+speak("محاولة جيدة")
+
+alert("❌ إجابة خاطئة")
 
 }
 
-/* التحقق */
+}
 
-function checkAnswer(num){
+function winner(){
 
-let buttons=["c1","c2","c3","c4"]
+let max=0
+let name=""
 
-buttons.forEach(id=>{
-document.getElementById(id).style.background="#0b5f7a"
+groups.forEach(g=>{
+
+if(g.points>max){
+
+max=g.points
+name=g.name
+
+}
+
 })
 
-if(num==correct){
+speak("الفريق الفائز هو "+name)
 
-document.getElementById("c"+num).style.background="green"
-
-correctSound.play()
-
-let msg=new SpeechSynthesisUtterance(
-"إجابة صحيحة. أحسنتم."
-)
-
-speechSynthesis.speak(msg)
-
-}
-else{
-
-document.getElementById("c"+num).style.background="red"
-
-wrongSound.play()
-
-let msg=new SpeechSynthesisUtterance(
-"محاولة جيدة. فكري مرة أخرى."
-)
-
-speechSynthesis.speak(msg)
-
-}
+alert("🏆 الفريق الفائز: "+name)
 
 }
 
@@ -347,3 +307,4 @@ speechSynthesis.speak(msg)
 
 </body>
 </html>
+
