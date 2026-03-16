@@ -8,13 +8,12 @@
 
 body{
 direction:rtl;
-font-family:Tajawal;
+font-family:Tahoma;
 margin:0;
 color:white;
 text-align:center;
-
-background:linear-gradient(270deg,#020617,#001a2e,#00e5ff,#001a2e,#020617);
-background-size:800% 800%;
+background:linear-gradient(270deg,#020617,#001a2e,#020617);
+background-size:600% 600%;
 animation:bg 15s infinite;
 }
 
@@ -24,23 +23,6 @@ animation:bg 15s infinite;
 100%{background-position:0% 50%}
 }
 
-body::before{
-content:"";
-position:fixed;
-width:100%;
-height:100%;
-background-image:
-linear-gradient(#00e5ff22 1px,transparent 1px),
-linear-gradient(90deg,#00e5ff22 1px,transparent 1px);
-background-size:40px 40px;
-animation:grid 20s linear infinite;
-}
-
-@keyframes grid{
-0%{transform:translateY(0)}
-100%{transform:translateY(40px)}
-}
-
 .box{
 background:#020617;
 border-radius:20px;
@@ -48,22 +30,6 @@ padding:25px;
 margin:20px auto;
 width:90%;
 box-shadow:0 0 35px #00e5ff;
-}
-
-input,select{
-padding:10px;
-margin:5px;
-border-radius:10px;
-border:none;
-}
-
-button{
-padding:10px 20px;
-border:none;
-border-radius:10px;
-background:#06b6d4;
-color:white;
-cursor:pointer;
 }
 
 .answer{
@@ -83,22 +49,6 @@ position:fixed;
 bottom:20px;
 left:20px;
 width:120px;
-animation:float 2s infinite alternate;
-}
-
-@keyframes float{
-from{transform:translateY(0)}
-to{transform:translateY(-12px)}
-}
-
-.trophy{
-font-size:60px;
-animation:cup 1s infinite alternate;
-}
-
-@keyframes cup{
-from{transform:scale(1)}
-to{transform:scale(1.2)}
 }
 
 </style>
@@ -120,44 +70,6 @@ to{transform:scale(1.2)}
 
 </div>
 
-
-<div class="box">
-
-<h2>الفصول</h2>
-
-<input id="className" placeholder="اسم الفصل">
-
-<button onclick="addClass()">إضافة فصل</button>
-
-<ul id="classList"></ul>
-
-</div>
-
-
-<div class="box">
-
-<h2>المجموعات</h2>
-
-<input id="groupName" placeholder="اسم المجموعة">
-
-<select id="groupClass"></select>
-
-<button onclick="addGroup()">إضافة</button>
-
-<table border="1" width="100%">
-<tr>
-<th>الفصل</th>
-<th>المجموعة</th>
-<th>النقاط</th>
-</tr>
-
-<tbody id="groups"></tbody>
-
-</table>
-
-</div>
-
-
 <div class="box">
 
 <h2>السؤال</h2>
@@ -174,18 +86,15 @@ to{transform:scale(1.2)}
 <br><br>
 
 <select id="correct">
-
 <option value="1">الإجابة الصحيحة 1</option>
 <option value="2">الإجابة الصحيحة 2</option>
 <option value="3">الإجابة الصحيحة 3</option>
 <option value="4">الإجابة الصحيحة 4</option>
-
 </select>
 
 <button onclick="loadQuestion()">عرض السؤال</button>
 
 </div>
-
 
 <div class="box">
 
@@ -198,154 +107,57 @@ to{transform:scale(1.2)}
 
 </div>
 
-
-<div class="box">
-
-<button onclick="winner()">🏆 إعلان الفريق الفائز</button>
-
-<h2 id="win"></h2>
-
-<div id="leaderboard"></div>
-
-</div>
-
-
 <img class="robot"
 src="https://cdn-icons-png.flaticon.com/512/4712/4712100.png">
 
-
 <script>
 
-let correctAnswer=1
+let correctAnswer = 1;
 
 function speak(text){
-
-let speech=new SpeechSynthesisUtterance(text)
-
-speech.lang="ar-SA"
-speech.rate=0.9
-
-speechSynthesis.speak(speech)
-
+let speech = new SpeechSynthesisUtterance(text);
+speech.lang="ar-SA";
+speech.rate=0.9;
+speechSynthesis.speak(speech);
 }
 
 window.onload=function(){
-
-speak("مرحباً بكن في عالم بصمة الذكاء الاصطناعي")
-
-}
-
-function addClass(){
-
-let name=document.getElementById("className").value
-
-let li=document.createElement("li")
-li.innerText=name
-
-document.getElementById("classList").appendChild(li)
-
-let opt=document.createElement("option")
-opt.innerText=name
-
-document.getElementById("groupClass").appendChild(opt)
-
-}
-
-function addGroup(){
-
-let g=document.getElementById("groupName").value
-let c=document.getElementById("groupClass").value
-
-let tr=document.createElement("tr")
-
-tr.innerHTML=
-"<td>"+c+"</td>"+
-"<td>"+g+"</td>"+
-"<td class='points'>0</td>"
-
-document.getElementById("groups").appendChild(tr)
-
+speak("مرحباً بكن في عالم بصمة الذكاء");
 }
 
 function loadQuestion(){
 
-let q=document.getElementById("question").value
+let q=document.getElementById("question").value;
 
-document.getElementById("qText").innerText=q
+document.getElementById("qText").innerText=q;
 
-document.getElementById("b1").innerText=document.getElementById("a1").value
-document.getElementById("b2").innerText=document.getElementById("a2").value
-document.getElementById("b3").innerText=document.getElementById("a3").value
-document.getElementById("b4").innerText=document.getElementById("a4").value
+document.getElementById("b1").innerText=document.getElementById("a1").value;
+document.getElementById("b2").innerText=document.getElementById("a2").value;
+document.getElementById("b3").innerText=document.getElementById("a3").value;
+document.getElementById("b4").innerText=document.getElementById("a4").value;
 
-correctAnswer=document.getElementById("correct").value
+correctAnswer = document.getElementById("correct").value;
 
-speak(q)
-
+speak(q);
 }
 
 function check(num){
 
-if(num==correctAnswer){
+if(num == correctAnswer){
 
-event.target.style.background="green"
-speak("إجابة صحيحة")
-
-let p=document.querySelector(".points")
-p.innerText=parseInt(p.innerText)+1
+event.target.style.background="green";
+speak("إجابة صحيحة");
 
 }else{
 
-event.target.style.background="red"
-speak("إجابة غير صحيحة")
+event.target.style.background="red";
+speak("إجابة خاطئة");
 
 }
-
-}
-
-function winner(){
-
-let rows=document.querySelectorAll("#groups tr")
-
-let max=0
-let win=""
-
-rows.forEach(r=>{
-
-let p=parseInt(r.children[2].innerText)
-
-if(p>max){
-
-max=p
-win=r.children[1].innerText
-
-}
-
-})
-
-document.getElementById("win").innerHTML="<div class='trophy'>🏆</div>"+win
-
-speak("الفريق الفائز هو "+win)
-
-leaderboard()
-
-}
-
-function leaderboard(){
-
-let rows=document.querySelectorAll("#groups tr")
-
-let text="<h3>📊 ترتيب المجموعات</h3>"
-
-rows.forEach(r=>{
-text+=r.children[1].innerText+" : "+r.children[2].innerText+" نقطة<br>"
-})
-
-document.getElementById("leaderboard").innerHTML=text
 
 }
 
 </script>
 
 </body>
-</html> 
+</html>
