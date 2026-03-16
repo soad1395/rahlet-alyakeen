@@ -8,13 +8,13 @@
 
 body{
 direction:rtl;
-font-family:Tahoma;
+font-family:Tajawal;
 margin:0;
 color:white;
 text-align:center;
 
-background:linear-gradient(270deg,#020617,#0f172a,#020617);
-background-size:600% 600%;
+background:linear-gradient(270deg,#020617,#001a2e,#00e5ff,#001a2e,#020617);
+background-size:800% 800%;
 animation:bg 15s infinite;
 }
 
@@ -24,8 +24,21 @@ animation:bg 15s infinite;
 100%{background-position:0% 50%}
 }
 
-.container{
-padding:20px;
+body::before{
+content:"";
+position:fixed;
+width:100%;
+height:100%;
+background-image:
+linear-gradient(#00e5ff22 1px,transparent 1px),
+linear-gradient(90deg,#00e5ff22 1px,transparent 1px);
+background-size:40px 40px;
+animation:grid 20s linear infinite;
+}
+
+@keyframes grid{
+0%{transform:translateY(0)}
+100%{transform:translateY(40px)}
 }
 
 .box{
@@ -42,7 +55,6 @@ padding:10px;
 margin:5px;
 border-radius:10px;
 border:none;
-width:160px;
 }
 
 button{
@@ -55,39 +67,28 @@ cursor:pointer;
 }
 
 .answer{
-width:150px;
-height:150px;
+width:140px;
+height:140px;
 border-radius:50%;
 display:inline-flex;
 align-items:center;
 justify-content:center;
-margin:20px;
-font-size:18px;
+margin:15px;
 cursor:pointer;
-transition:.4s;
 box-shadow:0 0 25px #00e5ff;
 }
-
-.answer:hover{
-transform:scale(1.1);
-}
-
-.a{background:#facc15}
-.b{background:#22c55e}
-.c{background:#ef4444}
-.d{background:#3b82f6}
 
 .robot{
 position:fixed;
 bottom:20px;
 left:20px;
-width:90px;
-animation:robot 2s infinite alternate;
+width:120px;
+animation:float 2s infinite alternate;
 }
 
-@keyframes robot{
+@keyframes float{
 from{transform:translateY(0)}
-to{transform:translateY(-10px)}
+to{transform:translateY(-12px)}
 }
 
 .trophy{
@@ -105,9 +106,20 @@ to{transform:scale(1.2)}
 
 <body>
 
-<div class="container">
-
 <h1>🤖 عالم بصمة الذكاء</h1>
+
+<div class="box">
+
+<h2>البيانات الأساسية</h2>
+
+<input placeholder="اسم المدرسة">
+<input placeholder="اسم المديرة">
+<input placeholder="اسم المعلمة">
+<input placeholder="المادة">
+<input placeholder="الصف">
+
+</div>
+
 
 <div class="box">
 
@@ -132,13 +144,15 @@ to{transform:scale(1.2)}
 
 <button onclick="addGroup()">إضافة</button>
 
-<table border="1" width="100%" style="margin-top:15px">
+<table border="1" width="100%">
 <tr>
 <th>الفصل</th>
 <th>المجموعة</th>
 <th>النقاط</th>
 </tr>
+
 <tbody id="groups"></tbody>
+
 </table>
 
 </div>
@@ -177,10 +191,10 @@ to{transform:scale(1.2)}
 
 <h2 id="qText"></h2>
 
-<div class="answer a" onclick="check(1)" id="b1"></div>
-<div class="answer b" onclick="check(2)" id="b2"></div>
-<div class="answer c" onclick="check(3)" id="b3"></div>
-<div class="answer d" onclick="check(4)" id="b4"></div>
+<div class="answer" onclick="check(1)" id="b1"></div>
+<div class="answer" onclick="check(2)" id="b2"></div>
+<div class="answer" onclick="check(3)" id="b3"></div>
+<div class="answer" onclick="check(4)" id="b4"></div>
 
 </div>
 
@@ -191,12 +205,14 @@ to{transform:scale(1.2)}
 
 <h2 id="win"></h2>
 
-</div>
+<div id="leaderboard"></div>
 
 </div>
+
 
 <img class="robot"
 src="https://cdn-icons-png.flaticon.com/512/4712/4712100.png">
+
 
 <script>
 
@@ -205,9 +221,9 @@ let correctAnswer=1
 function speak(text){
 
 let speech=new SpeechSynthesisUtterance(text)
+
 speech.lang="ar-SA"
 speech.rate=0.9
-speech.pitch=1
 
 speechSynthesis.speak(speech)
 
@@ -215,7 +231,7 @@ speechSynthesis.speak(speech)
 
 window.onload=function(){
 
-speak("مرحباً بكم في عالم بصمة الذكاء. استعدوا للتحدي")
+speak("مرحباً بكن في عالم بصمة الذكاء الاصطناعي")
 
 }
 
@@ -224,7 +240,6 @@ function addClass(){
 let name=document.getElementById("className").value
 
 let li=document.createElement("li")
-
 li.innerText=name
 
 document.getElementById("classList").appendChild(li)
@@ -273,19 +288,16 @@ function check(num){
 
 if(num==correctAnswer){
 
-speak("إجابة رائعة")
-
 event.target.style.background="green"
+speak("إجابة صحيحة")
 
 let p=document.querySelector(".points")
-
 p.innerText=parseInt(p.innerText)+1
 
 }else{
 
-speak("إجابة غير صحيحة")
-
 event.target.style.background="red"
+speak("إجابة غير صحيحة")
 
 }
 
@@ -311,13 +323,29 @@ win=r.children[1].innerText
 
 })
 
-document.getElementById("win").innerHTML="<div class='trophy'>🏆</div> الفريق الفائز: "+win
+document.getElementById("win").innerHTML="<div class='trophy'>🏆</div>"+win
 
 speak("الفريق الفائز هو "+win)
+
+leaderboard()
+
+}
+
+function leaderboard(){
+
+let rows=document.querySelectorAll("#groups tr")
+
+let text="<h3>📊 ترتيب المجموعات</h3>"
+
+rows.forEach(r=>{
+text+=r.children[1].innerText+" : "+r.children[2].innerText+" نقطة<br>"
+})
+
+document.getElementById("leaderboard").innerHTML=text
 
 }
 
 </script>
 
 </body>
-</html>
+</html> 
