@@ -2,260 +2,263 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>رحلة اليقين</title>
+<title>عالم بصمة الذكاء</title>
 
 <style>
 
 body{
-font-family:Tahoma;
 direction:rtl;
-text-align:center;
-background:#eef5f3;
+font-family:Tahoma;
 margin:0;
+background:#020f18;
+color:white;
+text-align:center;
+}
+
+/* خلفية الذكاء */
+
+body:before{
+content:"";
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:
+radial-gradient(circle at 30% 40%,#00e5ff33,transparent),
+radial-gradient(circle at 70% 60%,#00e5ff33,transparent);
+animation:move 8s infinite alternate;
+z-index:-1;
+}
+
+@keyframes move{
+0%{filter:hue-rotate(0deg)}
+100%{filter:hue-rotate(120deg)}
 }
 
 header{
-background:#2fb487;
-color:white;
-padding:15px;
-font-size:24px;
+font-size:34px;
+padding:20px;
+text-shadow:0 0 20px #00e5ff;
 }
 
-.info{
-background:white;
+.card{
+background:#021c2d;
+margin:20px auto;
+width:85%;
+max-width:900px;
+padding:20px;
+border-radius:12px;
+box-shadow:0 0 15px #00e5ff44;
+}
+
+input{
 padding:10px;
-border-bottom:1px solid #ddd;
-}
-
-.container{
-background:white;
-width:450px;
-margin:30px auto;
-padding:25px;
-border-radius:15px;
-box-shadow:0 10px 25px rgba(0,0,0,.2);
-}
-
-input,select,textarea{
-width:90%;
-padding:10px;
-margin:10px;
-border-radius:8px;
-border:1px solid #ccc;
+margin:5px;
+border-radius:6px;
+border:none;
 }
 
 button{
-background:#2fb487;
-color:white;
+padding:10px 15px;
 border:none;
-padding:12px 20px;
 border-radius:8px;
+background:#00e5ff;
 cursor:pointer;
 }
 
-.station{
-background:#f4f4f4;
-padding:15px;
-margin:15px 0;
-border-radius:10px;
+.circle{
+width:130px;
+height:130px;
+border-radius:50%;
+display:inline-flex;
+align-items:center;
+justify-content:center;
+margin:10px;
+font-size:16px;
+cursor:pointer;
+font-weight:bold;
 }
 
-.progress{
-background:#ddd;
-height:10px;
-border-radius:10px;
-margin:15px 0;
-}
-
-.bar{
-background:#2fb487;
-height:10px;
-width:0%;
-border-radius:10px;
-}
+.blue{background:#2196f3}
+.red{background:#f44336}
+.green{background:#4caf50}
+.yellow{background:#ffc107;color:black}
 
 table{
 width:100%;
 border-collapse:collapse;
+margin-top:10px;
 }
 
-td,th{
-border:1px solid #ccc;
+th,td{
+border:1px solid #00e5ff;
 padding:8px;
 }
 
-.adminBtn{
-font-size:13px;
-cursor:pointer;
-color:#555;
-}
-
 </style>
+
 </head>
 
 <body>
 
-<header>منصة رحلة اليقين</header>
+<header>🧠 عالم بصمة الذكاء</header>
 
-<div class="info">
+<!-- صوت البداية -->
 
-<b>اسم المدرسة:</b> ___________<br>
-<b>اسم المديرة:</b> ___________<br>
-<b>اسم المعلمة:</b> ___________<br>
-<b>عنوان الدرس:</b> ___________<br>
-<b>التاريخ:</b> ___________
+<audio autoplay>
+<source src="https://assets.mixkit.co/sfx/preview/mixkit-game-level-music-689.mp3">
+</audio>
 
-</div>
+<div class="card">
 
-<!-- صفحة البداية -->
+<h3>البيانات الأساسية</h3>
 
-<div class="container" id="start">
-
-<h3>بيانات الطالبة</h3>
-
-<input id="studentName" placeholder="اسم الطالبة">
-
-<select id="classSelect">
-<option>الأول ثانوي</option>
-<option>الثاني ثانوي</option>
-<option>الثالث ثانوي</option>
-</select>
-
-<select id="subjectSelect">
-<option>التوحيد</option>
-<option>الحديث</option>
-<option>الفقه</option>
-</select>
-
-<button onclick="startLesson()">ابدئي الرحلة</button>
-
-<p class="adminBtn" onclick="openArchive()">لوحة المعلمة</p>
+<input placeholder="اسم المدرسة">
+<input placeholder="اسم المديرة">
+<input placeholder="اسم المعلمة">
+<input placeholder="المادة">
+<input placeholder="الصف">
+<input placeholder="عنوان الدرس">
 
 </div>
 
-<!-- صفحة الدرس -->
+<div class="card">
 
-<div class="container" id="lessonPage" style="display:none">
+<h3>المجموعات</h3>
 
-<h3>فيديو الدرس</h3>
+<input id="teamName" placeholder="اسم المجموعة">
 
-<iframe width="360" height="200"
-src="https://www.youtube.com/embed/VIDEOID"
-frameborder="0"
-allowfullscreen></iframe>
+<button onclick="addTeam()">إضافة</button>
 
-<div class="progress">
-<div class="bar" id="progressBar"></div>
-</div>
-
-<h3>محطات التعلم</h3>
-
-<div class="station">
-محطة الاكتشاف<br>
-<textarea id="q1"></textarea>
-</div>
-
-<div class="station">
-محطة الفهم<br>
-<textarea id="q2"></textarea>
-</div>
-
-<div class="station">
-محطة التطبيق<br>
-<textarea id="q3"></textarea>
-</div>
-
-<div class="station">
-محطة التأمل<br>
-<textarea id="q4"></textarea>
-</div>
-
-<button onclick="saveAnswers()">حفظ الإجابات</button>
-
-</div>
-
-<!-- الأرشيف -->
-
-<div class="container" id="archivePage" style="display:none">
-
-<h3>أرشيف الطالبات</h3>
-
-<table>
+<table id="teamsTable">
 
 <tr>
-<th>الاسم</th>
-<th>الصف</th>
-<th>المادة</th>
-<th>الإجابات</th>
+<th>المجموعة</th>
+<th>النقاط</th>
+<th>+</th>
+<th>-</th>
+<th>حذف</th>
 </tr>
-
-<tbody id="archiveTable"></tbody>
 
 </table>
 
+<button onclick="winner()">🏆 إعلان الفائز</button>
+
+<h2 id="winner"></h2>
+
 </div>
+
+<div class="card">
+
+<h3>السؤال</h3>
+
+<input id="questionInput" placeholder="اكتب السؤال">
+
+<button onclick="addQuestion()">إضافة السؤال</button>
+
+<h2 id="questionTitle">السؤال يظهر هنا</h2>
+
+<div class="circle blue" onclick="wrong()">الصوم فقط</div>
+<div class="circle red" onclick="wrong()">الدعاء فقط</div>
+<div class="circle green" onclick="correct()">تشمل كل جوانب الحياة</div>
+<div class="circle yellow" onclick="wrong()">الصلاة فقط</div>
+
+</div>
+
+<audio id="correctSound" src="https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3"></audio>
+<audio id="wrongSound" src="https://assets.mixkit.co/sfx/preview/mixkit-player-losing-or-failing-2042.mp3"></audio>
 
 <script>
 
-let archive = JSON.parse(localStorage.getItem("archive")) || [];
+let groups=[]
 
-function startLesson(){
+function addTeam(){
 
-let name=document.getElementById("studentName").value;
+let name=document.getElementById("teamName").value
 
-if(name==""){
-alert("اكتبي اسم الطالبة");
-return;
-}
+groups.push({name:name,points:0})
 
-document.getElementById("start").style.display="none";
-document.getElementById("lessonPage").style.display="block";
+renderGroups()
 
 }
 
-function saveAnswers(){
+function renderGroups(){
 
-let name=document.getElementById("studentName").value;
-let cls=document.getElementById("classSelect").value;
-let sub=document.getElementById("subjectSelect").value;
+let table=document.getElementById("teamsTable")
 
-let answers=
-document.getElementById("q1").value+" | "+
-document.getElementById("q2").value+" | "+
-document.getElementById("q3").value+" | "+
-document.getElementById("q4").value;
-
-archive.push({name,cls,sub,answers});
-
-localStorage.setItem("archive",JSON.stringify(archive));
-
-document.getElementById("progressBar").style.width="100%";
-
-alert("تم حفظ الإجابات");
-
-}
-
-function openArchive(){
-
-document.getElementById("start").style.display="none";
-document.getElementById("archivePage").style.display="block";
-
-let table=document.getElementById("archiveTable");
-
-archive.forEach(a=>{
-
-let row=`
+table.innerHTML=`
 <tr>
-<td>${a.name}</td>
-<td>${a.cls}</td>
-<td>${a.sub}</td>
-<td>${a.answers}</td>
+<th>المجموعة</th>
+<th>النقاط</th>
+<th>+</th>
+<th>-</th>
+<th>حذف</th>
 </tr>
-`;
+`
 
-table.innerHTML+=row;
+groups.forEach((g,i)=>{
 
-});
+table.innerHTML+=`
+<tr>
+<td>${g.name}</td>
+<td>${g.points}</td>
+<td><button onclick="addPoint(${i})">+</button></td>
+<td><button onclick="minusPoint(${i})">-</button></td>
+<td><button onclick="deleteGroup(${i})">X</button></td>
+</tr>
+`
+
+})
+
+}
+
+function addPoint(i){
+groups[i].points++
+renderGroups()
+}
+
+function minusPoint(i){
+groups[i].points--
+renderGroups()
+}
+
+function deleteGroup(i){
+groups.splice(i,1)
+renderGroups()
+}
+
+function winner(){
+
+if(groups.length==0) return
+
+let win=groups.reduce((a,b)=>a.points>b.points?a:b)
+
+document.getElementById("winner").innerText="🏆 الفريق الفائز: "+win.name
+
+}
+
+function addQuestion(){
+
+let q=document.getElementById("questionInput").value
+
+document.getElementById("questionTitle").innerText=q
+
+}
+
+function correct(){
+
+document.getElementById("correctSound").play()
+
+alert("⭐ إجابة صحيحة")
+
+}
+
+function wrong(){
+
+document.getElementById("wrongSound").play()
+
+alert("❌ إجابة خاطئة")
 
 }
 
