@@ -12,46 +12,28 @@ font-family:tahoma;
 margin:0;
 color:white;
 text-align:center;
-background:black;
+background:#020617;
 overflow-x:hidden;
 }
 
-/* خلفية احترافية متحركة */
+/* خلفية نيون متحركة */
 
 body::before{
 content:"";
 position:fixed;
-width:200%;
-height:200%;
-background:
-radial-gradient(circle,#00eaff33 2px,transparent 2px);
-background-size:80px 80px;
-animation:stars 40s linear infinite;
-z-index:-2;
-}
-
-@keyframes stars{
-0%{transform:translateY(0)}
-100%{transform:translateY(200px)}
-}
-
-/* نيون */
-
-body::after{
-content:"";
-position:fixed;
 width:100%;
 height:100%;
-background:linear-gradient(270deg,#020617,#001a2e,#00eaff,#001a2e,#020617);
-background-size:800% 800%;
-animation:neon 15s infinite;
+background:
+radial-gradient(circle at 20% 20%, #00eaff55, transparent),
+radial-gradient(circle at 80% 70%, #7c3aed55, transparent),
+radial-gradient(circle at 50% 100%, #00ffcc55, transparent);
+animation:move 10s infinite alternate;
 z-index:-1;
 }
 
-@keyframes neon{
-0%{background-position:0% 50%}
-50%{background-position:100% 50%}
-100%{background-position:0% 50%}
+@keyframes move{
+from{transform:scale(1)}
+to{transform:scale(1.2)}
 }
 
 .container{
@@ -67,6 +49,8 @@ margin:25px 0;
 border-radius:20px;
 box-shadow:0 0 25px #00eaff55;
 }
+
+/* إدخال */
 
 input,select{
 padding:10px;
@@ -85,6 +69,8 @@ color:black;
 cursor:pointer;
 font-weight:bold;
 }
+
+/* الإجابات */
 
 .answers{
 display:flex;
@@ -108,14 +94,18 @@ transition:0.3s;
 }
 
 .circle:hover{transform:scale(1.1)}
-.correct{background:#22c55e !important;}
-.wrong{background:#ef4444 !important;}
+
+.correct{background:#22c55e}
+.wrong{background:#ef4444}
+
+/* روبوت */
 
 .robot{
 position:fixed;
 bottom:20px;
 left:20px;
-font-size:70px;
+font-size:80px;
+filter:drop-shadow(0 0 10px #00eaff);
 animation:float 3s infinite;
 }
 
@@ -123,16 +113,6 @@ animation:float 3s infinite;
 0%{transform:translateY(0)}
 50%{transform:translateY(-10px)}
 100%{transform:translateY(0)}
-}
-
-.trophy{
-font-size:60px;
-animation:cup 1s infinite alternate;
-}
-
-@keyframes cup{
-from{transform:scale(1)}
-to{transform:scale(1.3)}
 }
 
 </style>
@@ -162,6 +142,7 @@ to{transform:scale(1.3)}
 
 <div class="box">
 <h2>👨‍👩‍👧 المجموعات</h2>
+
 <select id="classSelect"></select>
 <input id="groupName" placeholder="اسم المجموعة">
 <button onclick="addGroup()">إضافة</button>
@@ -171,8 +152,10 @@ to{transform:scale(1.3)}
 <th>الفصل</th>
 <th>المجموعة</th>
 <th>النقاط</th>
+<th>حذف</th>
 </tr>
 </table>
+
 </div>
 
 <div class="box">
@@ -201,13 +184,13 @@ to{transform:scale(1.3)}
 </div>
 
 <div class="box">
-<button onclick="winner()">🏆 إعلان الفائز</button>
-<div id="winner"></div>
+<button onclick="winner()">🏆 إعلان الفريق الفائز</button>
+<h2 id="winner"></h2>
 </div>
 
 </div>
 
-<div class="robot">🤖</div>
+<div class="robot">🤖✨</div>
 
 <script>
 
@@ -215,20 +198,28 @@ let classes=[]
 let groups=[]
 let currentCorrect=1
 
-/* الصوت */
 function speak(text){
+
+speechSynthesis.cancel()
+
 let msg=new SpeechSynthesisUtterance(text)
 msg.lang="ar-SA"
+msg.rate=0.9
+
 speechSynthesis.speak(msg)
+
 }
 
-/* تشغيل الصوت بعد أول لمس */
+/* صوت الدخول */
+
 document.body.addEventListener("click", function(){
-speak("مرحباً بكم في عالم بصمة الذكاء");
+speak("مرحباً بكم في عالم الذكاء الاصطناعي");
 },{once:true});
 
 /* الفصول */
+
 function addClass(){
+
 let name=document.getElementById("className").value
 if(!name)return
 
@@ -242,17 +233,22 @@ let op=document.createElement("option")
 op.value=name
 op.text=name
 document.getElementById("classSelect").appendChild(op)
+
 }
 
 /* المجموعات */
+
 function addGroup(){
+
 let c=document.getElementById("classSelect").value
 let g=document.getElementById("groupName").value
 
 if(!g)return
 
 groups.push({class:c,name:g,points:0})
+
 renderGroups()
+
 }
 
 function renderGroups(){
@@ -264,21 +260,34 @@ table.innerHTML=`
 <th>الفصل</th>
 <th>المجموعة</th>
 <th>النقاط</th>
+<th>حذف</th>
 </tr>
 `
 
 groups.forEach((g,i)=>{
+
 table.innerHTML+=`
 <tr>
 <td>${g.class}</td>
 <td>${g.name}</td>
 <td>${g.points}</td>
+<td><button onclick="deleteGroup(${i})">🗑️</button></td>
 </tr>
 `
+
 })
+
 }
 
-/* عرض السؤال */
+function deleteGroup(i){
+
+groups.splice(i,1)
+renderGroups()
+
+}
+
+/* السؤال */
+
 function showQuestion(){
 
 let q=document.getElementById("question").value
@@ -307,7 +316,7 @@ div.onclick=function(){
 if((i+1)==currentCorrect){
 
 div.classList.add("correct")
-speak("إجابة صحيحة رائع")
+speak("إجابة صحيحة ممتاز")
 
 if(groups.length>0){
 groups[0].points++
@@ -317,7 +326,7 @@ renderGroups()
 }else{
 
 div.classList.add("wrong")
-speak("إجابة خاطئة حاولي مرة أخرى")
+speak("إجابة خاطئة")
 
 }
 
@@ -326,17 +335,19 @@ speak("إجابة خاطئة حاولي مرة أخرى")
 box.appendChild(div)
 
 })
+
 }
 
 /* الفائز */
+
 function winner(){
 
 if(groups.length==0)return
 
 let best=groups.reduce((a,b)=>a.points>b.points?a:b)
 
-document.getElementById("winner").innerHTML=
-"<div class='trophy'>🏆</div>"+best.name+" ("+best.class+")"
+document.getElementById("winner").innerText=
+"🏆 الفريق الفائز: "+best.name+" ("+best.class+")"
 
 speak("الفريق الفائز هو "+best.name)
 
