@@ -6,62 +6,49 @@
 
 <style>
 
-body{
-direction:rtl;
-font-family:tahoma;
+html,body{
+height:100%;
 margin:0;
+padding:0;
+overflow:hidden;
+font-family:tahoma;
 color:white;
 text-align:center;
-overflow-x:hidden;
-background:black;
 }
 
-/* فيديو الخلفية */
+/* 🎥 خلفية فل الشاشة */
 
 #bgVideo{
 position:fixed;
-width:100%;
-height:100%;
+top:0;
+left:0;
+width:100vw;
+height:100vh;
 object-fit:cover;
 z-index:-2;
 }
 
 .overlay{
 position:fixed;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.6);
+top:0;
+left:0;
+width:100vw;
+height:100vh;
+background:rgba(0,0,0,0.5);
 z-index:-1;
-}
-
-/* نيون */
-
-body::after{
-content:"";
-position:fixed;
-width:100%;
-height:100%;
-background:linear-gradient(270deg,#020617,#001a2e,#00eaff,#001a2e,#020617);
-background-size:800% 800%;
-animation:neon 12s infinite;
-z-index:-3;
-}
-
-@keyframes neon{
-0%{background-position:0% 50%}
-50%{background-position:100% 50%}
-100%{background-position:0% 50%}
 }
 
 .container{
 max-width:1000px;
 margin:auto;
 padding:20px;
+overflow-y:auto;
+height:100vh;
 }
 
 .box{
 background:#031429cc;
-padding:25px;
+padding:20px;
 margin:20px;
 border-radius:20px;
 box-shadow:0 0 25px #00eaff55;
@@ -72,7 +59,6 @@ padding:10px;
 margin:5px;
 border-radius:10px;
 border:none;
-width:180px;
 }
 
 button{
@@ -82,64 +68,39 @@ border-radius:10px;
 background:#00eaff;
 color:black;
 cursor:pointer;
-font-weight:bold;
 }
 
 .answers{
 display:flex;
 justify-content:center;
-gap:20px;
+gap:15px;
 flex-wrap:wrap;
 }
 
 .circle{
-width:130px;
-height:130px;
+width:110px;
+height:110px;
 border-radius:50%;
 display:flex;
 align-items:center;
 justify-content:center;
-box-shadow:0 0 25px #00eaff;
+background:#111;
+box-shadow:0 0 15px #00eaff;
 cursor:pointer;
-transition:0.3s;
 }
 
-.circle:hover{transform:scale(1.1)}
-
-.correct{background:#22c55e;}
-.wrong{background:#ef4444;}
+.correct{background:green;}
+.wrong{background:red;}
 
 .robot{
 position:fixed;
-bottom:20px;
-left:20px;
-font-size:80px;
-animation:float 3s infinite;
+bottom:10px;
+left:10px;
+font-size:70px;
 }
-
-@keyframes float{
-0%{transform:translateY(0)}
-50%{transform:translateY(-10px)}
-100%{transform:translateY(0)}
-}
-
-/* كأس */
 
 .trophy{
-font-size:70px;
-animation:pop 0.8s infinite alternate;
-}
-
-@keyframes pop{
-from{transform:scale(1)}
-to{transform:scale(1.3)}
-}
-
-/* قصاصات */
-
-@keyframes fall{
-0%{transform:translateY(0)}
-100%{transform:translateY(100vh)}
+font-size:60px;
 }
 
 </style>
@@ -155,53 +116,39 @@ to{transform:scale(1.3)}
 <h1>🤖 منصة بصمة الذكاء</h1>
 
 <div class="box">
-<h2>🎥 اختيار الخلفية</h2>
 <input type="file" accept="video/*" onchange="loadVideo(event)">
 </div>
 
 <div class="box">
-<h2>📋 البيانات</h2>
-<input placeholder="اسم المدرسة">
-<input placeholder="اسم المديرة">
-<input placeholder="اسم المعلمة">
-<input placeholder="المادة">
-<input placeholder="الصف">
-</div>
-
-<div class="box">
-<h2>👥 الفصول</h2>
-<input id="className" placeholder="اسم الفصل">
+<h3>الفصول</h3>
+<input id="className">
 <button onclick="addClass()">إضافة</button>
 <ul id="classList"></ul>
 </div>
 
 <div class="box">
-<h2>👨‍👩‍👧 المجموعات</h2>
+<h3>المجموعات</h3>
 
 <select id="classSelect"></select>
-<input id="groupName" placeholder="اسم المجموعة">
+<input id="groupName">
 <button onclick="addGroup()">إضافة</button>
 
-<table id="groupsTable" width="100%">
-<tr>
-<th>الفصل</th>
-<th>المجموعة</th>
-<th>النقاط</th>
-<th>حذف</th>
-</tr>
-</table>
+<br><br>
+
+<select id="groupSelect"></select>
+
+<table id="groupsTable" width="100%"></table>
 
 </div>
 
 <div class="box">
-<h2>🎮 السؤال</h2>
 
-<input id="question" placeholder="اكتب السؤال"><br>
+<input id="question" placeholder="السؤال"><br>
 
-<input id="a1" placeholder="إجابة 1">
-<input id="a2" placeholder="إجابة 2">
-<input id="a3" placeholder="إجابة 3">
-<input id="a4" placeholder="إجابة 4"><br>
+<input id="a1">
+<input id="a2">
+<input id="a3">
+<input id="a4"><br>
 
 <select id="correct">
 <option value="0">1</option>
@@ -212,7 +159,7 @@ to{transform:scale(1.3)}
 
 <br><br>
 
-<button onclick="showQuestion()">عرض السؤال</button>
+<button onclick="showQuestion()">عرض</button>
 
 <div class="answers" id="answers"></div>
 
@@ -225,177 +172,139 @@ to{transform:scale(1.3)}
 
 </div>
 
-<div class="robot">🤖✨</div>
+<div class="robot">🤖</div>
 
 <script>
 
+/* 🎥 فيديو */
 function loadVideo(e){
-let file=e.target.files[0]
-document.getElementById("bgVideo").src=URL.createObjectURL(file)
+document.getElementById("bgVideo").src=URL.createObjectURL(e.target.files[0])
 }
 
-/* صوت */
-
+/* 🔊 صوت روبوت */
 function speak(text){
 speechSynthesis.cancel()
 let msg=new SpeechSynthesisUtterance(text)
 msg.lang="ar-SA"
-msg.rate=0.9
+msg.rate=0.85
+msg.pitch=0.8
 speechSynthesis.speak(msg)
 }
 
-document.body.addEventListener("click", ()=>{
-speak("مرحباً بكم في عالم الذكاء الاصطناعي");
-},{once:true});
-
 /* بيانات */
-
 let classes=[]
 let groups=[]
 let correctAnswer=0
 
 /* فصول */
-
 function addClass(){
-let name=document.getElementById("className").value
+let name=className.value
 if(!name)return
 
 classes.push(name)
 
 let li=document.createElement("li")
-li.innerHTML= name + 
-` <button onclick="deleteClass(${classes.length-1})">❌</button>`
+li.innerHTML=name+` <button onclick="deleteClass(${classes.length-1})">❌</button>`
+classList.appendChild(li)
 
-document.getElementById("classList").appendChild(li)
-
-let op=document.createElement("option")
-op.value=name
-op.text=name
-document.getElementById("classSelect").appendChild(op)
+let op=new Option(name,name)
+classSelect.add(op)
 }
 
+/* حذف فصل */
 function deleteClass(i){
 classes.splice(i,1)
 location.reload()
 }
 
 /* مجموعات */
-
 function addGroup(){
-let c=document.getElementById("classSelect").value
-let g=document.getElementById("groupName").value
+let c=classSelect.value
+let g=groupName.value
 if(!g)return
 
 groups.push({class:c,name:g,points:0})
+
+let op=new Option(g,g)
+groupSelect.add(op)
+
 renderGroups()
 }
 
 function renderGroups(){
-let table=document.getElementById("groupsTable")
 
-table.innerHTML=`
-<tr>
-<th>الفصل</th>
-<th>المجموعة</th>
-<th>النقاط</th>
-<th>حذف</th>
-</tr>
+groupsTable.innerHTML=`
+<tr><th>الفصل</th><th>المجموعة</th><th>النقاط</th></tr>
 `
 
-groups.forEach((g,i)=>{
-table.innerHTML+=`
+groups.forEach(g=>{
+groupsTable.innerHTML+=`
 <tr>
 <td>${g.class}</td>
 <td>${g.name}</td>
 <td>${g.points}</td>
-<td><button onclick="deleteGroup(${i})">🗑️</button></td>
 </tr>
 `
 })
 }
 
-function deleteGroup(i){
-groups.splice(i,1)
-renderGroups()
-}
-
 /* سؤال */
-
 function showQuestion(){
 
-let q=document.getElementById("question").value
+let q=question.value
 speak(q)
 
-let answers=[
-document.getElementById("a1").value,
-document.getElementById("a2").value,
-document.getElementById("a3").value,
-document.getElementById("a4").value
-]
+let answers=[a1.value,a2.value,a3.value,a4.value]
 
-correctAnswer=parseInt(document.getElementById("correct").value)
+correctAnswer=parseInt(correct.value)
 
-let box=document.getElementById("answers")
-box.innerHTML=""
+answersBox.innerHTML=""
 
 answers.forEach((a,i)=>{
 
-let div=document.createElement("div")
-div.className="circle"
-div.innerText=a
+let d=document.createElement("div")
+d.className="circle"
+d.innerText=a
 
-div.onclick=function(){
+d.onclick=function(){
+
+let selectedGroup=groupSelect.value
+let g=groups.find(x=>x.name==selectedGroup)
 
 if(i==correctAnswer){
-div.classList.add("correct")
+
+d.classList.add("correct")
 speak("إجابة صحيحة")
 
-if(groups.length>0){
-groups[0].points++
+if(g){
+g.points++
 renderGroups()
 }
 
 }else{
-div.classList.add("wrong")
+
+d.classList.add("wrong")
 speak("إجابة خاطئة")
-}
 
 }
 
-box.appendChild(div)
+}
+
+answers.appendChild
 
 })
 
 }
 
-/* 🎉 احتفال الفوز */
-
+/* الفائز */
 function winner(){
-
-if(groups.length==0)return
 
 let best=groups.reduce((a,b)=>a.points>b.points?a:b)
 
-document.getElementById("winner").innerHTML=
-"<div class='trophy'>🏆</div>"+best.name+"<br>🔥 أبدعتم 🔥"
+winner.innerHTML="🏆 "+best.name
 
-/* صوت */
 let clap=new Audio("https://www.soundjay.com/human/applause-8.mp3")
 clap.play()
-
-/* قصاصات */
-for(let i=0;i<80;i++){
-let c=document.createElement("div")
-c.style.position="fixed"
-c.style.width="8px"
-c.style.height="8px"
-c.style.background="#00eaff"
-c.style.left=Math.random()*100+"%"
-c.style.top="0"
-c.style.animation="fall 3s linear"
-document.body.appendChild(c)
-setTimeout(()=>c.remove(),3000)
-}
 
 speak("الفريق الفائز هو "+best.name)
 
