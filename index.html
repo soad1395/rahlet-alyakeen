@@ -9,14 +9,13 @@
 html,body{
 height:100%;
 margin:0;
-padding:0;
-overflow:hidden;
 font-family:tahoma;
 color:white;
 text-align:center;
+overflow:hidden;
 }
 
-/* 🎥 خلفية فل الشاشة */
+/* 🎥 خلفية كاملة */
 
 #bgVideo{
 position:fixed;
@@ -70,6 +69,8 @@ color:black;
 cursor:pointer;
 }
 
+/* إجابات */
+
 .answers{
 display:flex;
 justify-content:center;
@@ -115,22 +116,36 @@ font-size:60px;
 
 <h1>🤖 منصة بصمة الذكاء</h1>
 
+<!-- 🎥 الخلفية -->
 <div class="box">
+<h3>🎥 اختيار الخلفية</h3>
 <input type="file" accept="video/*" onchange="loadVideo(event)">
 </div>
 
+<!-- 📋 البيانات الأساسية -->
 <div class="box">
-<h3>الفصول</h3>
-<input id="className">
+<h3>📋 البيانات الأساسية</h3>
+<input placeholder="اسم المدرسة">
+<input placeholder="اسم المديرة">
+<input placeholder="اسم المعلمة">
+<input placeholder="المادة">
+<input placeholder="الصف">
+</div>
+
+<!-- 👥 الفصول -->
+<div class="box">
+<h3>👥 الفصول</h3>
+<input id="className" placeholder="اسم الفصل">
 <button onclick="addClass()">إضافة</button>
 <ul id="classList"></ul>
 </div>
 
+<!-- 👨‍👩‍👧 المجموعات -->
 <div class="box">
-<h3>المجموعات</h3>
+<h3>👨‍👩‍👧 المجموعات</h3>
 
 <select id="classSelect"></select>
-<input id="groupName">
+<input id="groupName" placeholder="اسم المجموعة">
 <button onclick="addGroup()">إضافة</button>
 
 <br><br>
@@ -141,14 +156,17 @@ font-size:60px;
 
 </div>
 
+<!-- 🎮 السؤال -->
 <div class="box">
 
-<input id="question" placeholder="السؤال"><br>
+<h3>🎮 السؤال</h3>
 
-<input id="a1">
-<input id="a2">
-<input id="a3">
-<input id="a4"><br>
+<input id="question" placeholder="اكتب السؤال"><br>
+
+<input id="a1" placeholder="إجابة 1">
+<input id="a2" placeholder="إجابة 2">
+<input id="a3" placeholder="إجابة 3">
+<input id="a4" placeholder="إجابة 4"><br>
 
 <select id="correct">
 <option value="0">1</option>
@@ -159,12 +177,13 @@ font-size:60px;
 
 <br><br>
 
-<button onclick="showQuestion()">عرض</button>
+<button onclick="showQuestion()">عرض السؤال</button>
 
 <div class="answers" id="answers"></div>
 
 </div>
 
+<!-- 🏆 الفائز -->
 <div class="box">
 <button onclick="winner()">🏆 إعلان الفائز</button>
 <h2 id="winner"></h2>
@@ -176,20 +195,23 @@ font-size:60px;
 
 <script>
 
-/* 🎥 فيديو */
+/* فيديو */
 function loadVideo(e){
-document.getElementById("bgVideo").src=URL.createObjectURL(e.target.files[0])
+bgVideo.src=URL.createObjectURL(e.target.files[0])
 }
 
-/* 🔊 صوت روبوت */
+/* صوت */
 function speak(text){
 speechSynthesis.cancel()
 let msg=new SpeechSynthesisUtterance(text)
 msg.lang="ar-SA"
-msg.rate=0.85
-msg.pitch=0.8
+msg.rate=0.9
 speechSynthesis.speak(msg)
 }
+
+document.body.addEventListener("click", ()=>{
+speak("مرحباً بكم في عالم الذكاء الاصطناعي");
+},{once:true});
 
 /* بيانات */
 let classes=[]
@@ -207,8 +229,7 @@ let li=document.createElement("li")
 li.innerHTML=name+` <button onclick="deleteClass(${classes.length-1})">❌</button>`
 classList.appendChild(li)
 
-let op=new Option(name,name)
-classSelect.add(op)
+classSelect.add(new Option(name,name))
 }
 
 /* حذف فصل */
@@ -225,17 +246,14 @@ if(!g)return
 
 groups.push({class:c,name:g,points:0})
 
-let op=new Option(g,g)
-groupSelect.add(op)
+groupSelect.add(new Option(g,g))
 
 renderGroups()
 }
 
 function renderGroups(){
 
-groupsTable.innerHTML=`
-<tr><th>الفصل</th><th>المجموعة</th><th>النقاط</th></tr>
-`
+groupsTable.innerHTML=`<tr><th>الفصل</th><th>المجموعة</th><th>النقاط</th></tr>`
 
 groups.forEach(g=>{
 groupsTable.innerHTML+=`
@@ -252,15 +270,15 @@ groupsTable.innerHTML+=`
 function showQuestion(){
 
 let q=question.value
-speak(q)
+setTimeout(()=>speak(q),500)
 
-let answers=[a1.value,a2.value,a3.value,a4.value]
+let arr=[a1.value,a2.value,a3.value,a4.value]
 
 correctAnswer=parseInt(correct.value)
 
-answersBox.innerHTML=""
+answers.innerHTML=""
 
-answers.forEach((a,i)=>{
+arr.forEach((a,i)=>{
 
 let d=document.createElement("div")
 d.className="circle"
@@ -268,11 +286,9 @@ d.innerText=a
 
 d.onclick=function(){
 
-let selectedGroup=groupSelect.value
-let g=groups.find(x=>x.name==selectedGroup)
+let g=groups.find(x=>x.name==groupSelect.value)
 
 if(i==correctAnswer){
-
 d.classList.add("correct")
 speak("إجابة صحيحة")
 
@@ -282,26 +298,26 @@ renderGroups()
 }
 
 }else{
-
 d.classList.add("wrong")
 speak("إجابة خاطئة")
-
 }
 
 }
 
-answers.appendChild
+answers.appendChild(d)
 
 })
 
 }
 
-/* الفائز */
+/* فائز */
 function winner(){
+
+if(groups.length==0)return
 
 let best=groups.reduce((a,b)=>a.points>b.points?a:b)
 
-winner.innerHTML="🏆 "+best.name
+winner.innerHTML="🏆 "+best.name+" 🔥"
 
 let clap=new Audio("https://www.soundjay.com/human/applause-8.mp3")
 clap.play()
