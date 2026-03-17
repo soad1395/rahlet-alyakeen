@@ -16,7 +16,7 @@ background:black;
 overflow-x:hidden;
 }
 
-/* خلفية فضاء ذكاء */
+/* خلفية احترافية متحركة */
 
 body::before{
 content:"";
@@ -68,8 +68,6 @@ border-radius:20px;
 box-shadow:0 0 25px #00eaff55;
 }
 
-/* الإدخال */
-
 input,select{
 padding:10px;
 margin:5px;
@@ -87,8 +85,6 @@ color:black;
 cursor:pointer;
 font-weight:bold;
 }
-
-/* الإجابات */
 
 .answers{
 display:flex;
@@ -111,19 +107,9 @@ box-shadow:0 0 25px #00eaff;
 transition:0.3s;
 }
 
-.circle:hover{
-transform:scale(1.1);
-}
-
-.correct{
-background:#22c55e !important;
-}
-
-.wrong{
-background:#ef4444 !important;
-}
-
-/* روبوت */
+.circle:hover{transform:scale(1.1)}
+.correct{background:#22c55e !important;}
+.wrong{background:#ef4444 !important;}
 
 .robot{
 position:fixed;
@@ -139,8 +125,6 @@ animation:float 3s infinite;
 100%{transform:translateY(0)}
 }
 
-/* كأس */
-
 .trophy{
 font-size:60px;
 animation:cup 1s infinite alternate;
@@ -149,19 +133,6 @@ animation:cup 1s infinite alternate;
 @keyframes cup{
 from{transform:scale(1)}
 to{transform:scale(1.3)}
-}
-
-/* احتفال */
-
-.celebrate{
-font-size:40px;
-animation:boom 1s infinite;
-}
-
-@keyframes boom{
-0%{transform:scale(1)}
-50%{transform:scale(1.3)}
-100%{transform:scale(1)}
 }
 
 </style>
@@ -232,7 +203,6 @@ animation:boom 1s infinite;
 <div class="box">
 <button onclick="winner()">🏆 إعلان الفائز</button>
 <div id="winner"></div>
-<div id="celebrate"></div>
 </div>
 
 </div>
@@ -243,21 +213,21 @@ animation:boom 1s infinite;
 
 let classes=[]
 let groups=[]
+let currentCorrect=1
 
+/* الصوت */
 function speak(text){
 let msg=new SpeechSynthesisUtterance(text)
 msg.lang="ar-SA"
 speechSynthesis.speak(msg)
 }
 
-/* صوت الدخول */
-
-window.onload=function(){
-speak("مرحباً بكم في عالم الذكاء الاصطناعي")
-}
+/* تشغيل الصوت بعد أول لمس */
+document.body.addEventListener("click", function(){
+speak("مرحباً بكم في عالم بصمة الذكاء");
+},{once:true});
 
 /* الفصول */
-
 function addClass(){
 let name=document.getElementById("className").value
 if(!name)return
@@ -275,27 +245,40 @@ document.getElementById("classSelect").appendChild(op)
 }
 
 /* المجموعات */
-
 function addGroup(){
-
 let c=document.getElementById("classSelect").value
 let g=document.getElementById("groupName").value
 
 if(!g)return
 
-let group={class:c,name:g,points:0}
-groups.push(group)
+groups.push({class:c,name:g,points:0})
+renderGroups()
+}
 
-let row=document.getElementById("groupsTable").insertRow()
+function renderGroups(){
 
-row.insertCell(0).innerText=c
-row.insertCell(1).innerText=g
-row.insertCell(2).innerText=0
+let table=document.getElementById("groupsTable")
 
+table.innerHTML=`
+<tr>
+<th>الفصل</th>
+<th>المجموعة</th>
+<th>النقاط</th>
+</tr>
+`
+
+groups.forEach((g,i)=>{
+table.innerHTML+=`
+<tr>
+<td>${g.class}</td>
+<td>${g.name}</td>
+<td>${g.points}</td>
+</tr>
+`
+})
 }
 
 /* عرض السؤال */
-
 function showQuestion(){
 
 let q=document.getElementById("question").value
@@ -308,7 +291,7 @@ document.getElementById("a3").value,
 document.getElementById("a4").value
 ]
 
-let correct=document.getElementById("correct").value
+currentCorrect=parseInt(document.getElementById("correct").value)
 
 let box=document.getElementById("answers")
 box.innerHTML=""
@@ -321,14 +304,14 @@ div.innerText=a
 
 div.onclick=function(){
 
-if((i+1)==correct){
+if((i+1)==currentCorrect){
 
 div.classList.add("correct")
 speak("إجابة صحيحة رائع")
 
 if(groups.length>0){
 groups[0].points++
-document.getElementById("groupsTable").rows[1].cells[2].innerText=groups[0].points
+renderGroups()
 }
 
 }else{
@@ -343,11 +326,9 @@ speak("إجابة خاطئة حاولي مرة أخرى")
 box.appendChild(div)
 
 })
-
 }
 
 /* الفائز */
-
 function winner(){
 
 if(groups.length==0)return
@@ -355,9 +336,7 @@ if(groups.length==0)return
 let best=groups.reduce((a,b)=>a.points>b.points?a:b)
 
 document.getElementById("winner").innerHTML=
-"<div class='trophy'>🏆</div>"+best.name
-
-document.getElementById("celebrate").innerHTML="🎆🎉🎆"
+"<div class='trophy'>🏆</div>"+best.name+" ("+best.class+")"
 
 speak("الفريق الفائز هو "+best.name)
 
